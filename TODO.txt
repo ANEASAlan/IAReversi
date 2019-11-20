@@ -1,0 +1,41 @@
+Page du cours : https://www.labri.fr/perso/lsimon/M1-2019/
+Page du projet : https://www.labri.fr/perso/lsimon/M1-2019/Projet-Reversi/
+Sujet du projet : https://www.labri.fr/perso/lsimon/M1-2019/Projet-Reversi/Sujet-Reversi.pdf
+
+Résumé des consignes :
+-votre IA doit implémenter l'interface donnée dans le script playerInterface.py (ce qu’il faut faire c’est modifier myPlayer.py pour en faire notre joueur, càd modifier getPlayerName(self) et getPlayerMove(self))
+-Vous donnerez également un fichier README.txt décrivant les techniques utilisées dans votre I.A.
+
+Description des fichiers :
+-README.txt (à écrire) : fichier décrivant les techniques utilisées dans l'I.A.
+-myPlayer.py (à modifier) : le fichier à modifier pour le projet, faire notre propre joueur
+-playerInterface.py : le fichier expliquant les fonctions dans myPlayer.py
+-randomPlayer.py : le joueur aléatoire
+-localGame.py : permet de connecter deux joueurs via leurs interfaces (myPlayer vs myPlayer)
+-randomLocalGame.py : idem pour randomPlayer vs randomPlayer
+-Reversi.py : fichier de règles du Reversi
+
+A savoir :
+-Un exemple de joueur aléatoire implémentant l'interface est donné dans le fichier myPlayer.py
+-Pour vous donner une idée de comment le tournoi sera organisé, un autre script python (localGame.py) permet de connecter deux joueurs via leurs interfaces. Ce script ne sera pas utilisé pour le tournoi car chaque joueur n'est pas correctement isolé dans un processus indépendant. Durant le tournoi, les joueurs communiqueront en réseau avec l'arbitre. Tout sera géré automatiquement via l'interface donnée.
+-Les sorties standards seront sauvegardées pour afficher les matchs (mettez-y des informations importantes). Par exemple, si vous voulez faire un match de votre IA contre le random player, il vous faudra copier myPlayer en randomPlayer et copier localGame pour qu'il charge le joueur aléatoire avec le vôtre. Important : pour le rendu, localGame doit ne lancer que votre I.A. contre elle-même et myPlayer doit implanter votre joueur, c'est à dire le joueur qui devra entrer dans le tournoi. Il est déconseillé, pour la version tournoi, de laisser un constructeur ayant des paramètres. Si vous décidez de laisser des paramètres (comme la profondeur maximale de votre minimax) à donner au constructeur, il faut absolument clarifier quels paramètres doivent être donnés.
+
+Ce que l'on a pas le droit de faire :
+-Chaque joueur n'aura le droit qu'à 5 minutes de temps réel de réflexion sur toute la partie. Il est interdit à un joueur de consommer du temps CPU en dehors des appels explicites aux fonctions de l'interface (vous ne devez par exemple pas répondre à la méthode getPlayerMove() en laissant trainer un thread après votre réponse).
+-Vous n'avez pas le droit d'écrire dans votre répertoire pendant le match. Le tournoi lancera plusieurs instances de votre I.A. et votre répertoire sera en lecture seule (vous pourrez écrire dans /tmp mais il faudra bien penser à nommer vos fichiers de manière unique).
+
+Ce que l'on a le droit de faire :
+-Vous êtes libre d'écrire votre propre classe Board à la manière du script Reversi.py pour accélérer votre I.A., mais il faut absolument laisser ce script intact pour que localGame se passe bien. Typiquement, si vous voulez le modifier, il faudra en faire une copie et renommer la classe et le fichier.
+-Vous êtes libres d'organiser des tournois entre vous.
+
+
+TODO :
+-Implémenter getPlayerMove(self)
+-
+
+
+Modalités du rendu :
+-Vous devez rendre une archive contenant un répertoire ayant votre nom d'équipe (sans espaces).
+-Si on lance python localGame.py dans votre répertoire, cela doit lancer un match de votre I.A. contre elle-même (ce script ne doit normalement pas être modifié).
+-Vous donnerez également un fichier README.txt décrivant les techniques utilisées dans votre I.A.
+-Vous devrez modifier le fichier myPlayer.py pour qu'il implémente votre propre joueur.

@@ -1,9 +1,9 @@
 #Pour vous donner une idée de comment le tournoi sera organisé,
 # localGame.py permet de connecter deux joueurs via leurs interfaces.
-# myPlayer vs myPlayer
+# randomPlayer vs RandomPlayer
 
 import Reversi
-import myPlayer
+import randomPlayer
 import time
 from io import StringIO
 import sys
@@ -11,10 +11,10 @@ import sys
 b = Reversi.Board(10)
 
 players = []
-player1 = myPlayer.myPlayer()
+player1 = randomPlayer.randomPlayer()
 player1.newGame(b._BLACK)
 players.append(player1)
-player2 = myPlayer.myPlayer()
+player2 = randomPlayer.randomPlayer()
 player2.newGame(b._WHITE)
 players.append(player2)
 

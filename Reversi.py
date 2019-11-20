@@ -1,10 +1,59 @@
 # -*- coding: utf-8 -*-
 
 ''' Fichier de règles du Reversi pour le tournoi Masters Info 2019 en IA.
-    Certaines parties de ce code sont fortement inspirée de 
+    Certaines parties de ce code sont fortement inspirées de 
     https://inventwithpython.com/chapter15.html
 
     '''
+
+    #def __init__(self, boardsize = 8):
+
+    #def reset(self):
+
+    #def get_board_size(self):
+
+    #def get_nb_pieces(self):
+
+    #def is_valid_move(self, player, x, y):
+        
+    #def _isOnBoard(self,x,y):
+        
+    #def testAndBuild_ValidMove(self, player, xstart, ystart):
+
+    #def lazyTest_ValidMove(self, player, xstart, ystart):
+
+    #def _flip(self, player):
+
+    #def is_game_over(self):
+
+    #def push(self, move):
+
+    #def pop(self):
+
+    #def at_least_one_legal_move(self, player):
+
+    #def legal_moves(self):
+
+    #def heuristique(self, player=None):
+
+    #def __str__(self)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Board:
     _BLACK = 1

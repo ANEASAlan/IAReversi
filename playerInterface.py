@@ -6,7 +6,7 @@ class PlayerInterface():
     # Returns your move. The move must be a couple of two integers,
     # Which are the coordinates of where you want to put your piece
     # on the board. Coordinates are the coordinates given by the Reversy.py
-    # methods (e.g. validMove(board, x, y) must be true of you play '(x,y)')
+    # methods (e.g. validMove(board, x, y) must be true if you play '(x,y)')
     # You can also answer (-1,-1) as "pass". Note: the referee will never
     # call your function if the game is over
     def getPlayerMove(self):
