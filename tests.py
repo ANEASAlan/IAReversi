@@ -1,5 +1,5 @@
 import Reversi
-import myPlayerCorners
+import myPlayer
 import randomPlayer
 import time
 from io import StringIO
@@ -9,11 +9,8 @@ import random
 def createBoard(size):
     return Reversi.Board(size)
 
-def assignColors():
+def assignColors(player1, player2):
     players = []
-
-    player1 = myPlayerCorners.myPlayerCorners()
-    player2 = randomPlayer.randomPlayer()
 
     player1.newGame(board._BLACK)
     player2.newGame(board._WHITE)
@@ -100,6 +97,89 @@ def play(board, players):
 
     return totalTime
 
+################################################################################
+#################################### HEURISTICS ################################
+################################################################################
+
+def countingCorners(board):
+    # To parse the board you want to do a double for loop
+    # Best case would be to do it all in a unique loop but that's
+    # difficult
+
+    # The board is a square
+    size = board.get_board_size()
+
+    # The board to use, to avoid multiple dots
+    board = board._board
+
+    # This stores the number of disks in the corners
+    # A white one is worth 3 and a black one is worth -3
+    # The count is negative if this is the foe's turn (*** TO DO ***)
+    # So far, the state of the game doesn't matter, it should (** TO DO **)
+    cornerCount = 0
+    cornerCount += cornerCountingMethod(board, size, 0, 0)
+    cornerCount += cornerCountingMethod(board, size, 0, size - 1)
+    cornerCount += cornerCountingMethod(board, size, size - 1, 0)
+    cornerCount += cornerCountingMethod(board, size, size - 1, size - 1)
+    return cornerCount
+
+################################################################################
+######################## Utility functions #####################################
+################################################################################
+
+# Cette fonction teste si une position est dans le coin de la table
+def isCorner(size, x, y):
+
+    # Coin supérieur gauche
+    if x == 0 and y == 0:
+        return True
+
+    # Coin supérieur droit
+    if x == size - 1 and y == 0:
+        return True
+
+    # Coin inférieur gauche
+    if x == 0 and y == size - 1:
+        return True
+
+    # Coin inférieur droit
+    if x == size - 1 and y == size -1:
+        return True
+
+    return False
+
+# Une fonction pour rendre le code plus lisible permettant de savoir si un
+# palet est blanc
+def isWhite(board, x, y):
+    if board[x][y] == 1:
+        return True
+    return False
+
+# Une fonction pour rendre le code plus lisible permettant de savoir si un
+# palet est noir
+def isBlack(board, x, y):
+    if board[x][y] == 2:
+        return True
+    return False
+
+# Cette fonction est aussi là pour rendre le code plus lisible
+# Elle renvoie 3 si le palet en (x, y) est blanc, -3 si il est noir, 0 sinon
+def cornerCountingMethod(board, size, x, y):
+
+    if isCorner(size, x, y):
+
+        if isWhite(board, x, y):
+            return 3
+
+        if isBlack(board, x, y):
+            return -3
+
+    return 0
+
+################################################################################
+######################################## CODE ##################################
+################################################################################
+
 count = {
     'Corners' : 0,
     'Random' : 0
@@ -107,7 +187,12 @@ count = {
 
 for i in range(10):
     board = createBoard(10)
-    players = assignColors()
+
+    player1 = myPlayer.myPlayer(countingCorners)
+    player2 = randomPlayer.randomPlayer()
+
+    players = assignColors(player1, player2)
+    players[0]
 
     t = play(board, players)
 

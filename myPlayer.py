@@ -9,35 +9,70 @@ from playerInterface import *
 
 class myPlayer(PlayerInterface):
 
-    def __init__(self):
+    def __init__(self, heuristicMethod):
         self._board = Reversi.Board(10)
         self._mycolor = None
+        self.minInt = - 2 ** 64
+        self.maxInt = - self.minInt
+        self.heuristicMethod = heuristicMethod
 
     # Returns your player name, as to be displayed during the game
     def getPlayerName(self):
         return "ANEAS DE CASTRO PINTO"
 
-    def MiniMax():
-        if self._board.is_game_over():
-            print("Referee told me to play but the game is over!")
-            return Reversi.heuristique(self, self._mycolor)
-        moves = [m for m in self._board.legal_moves()]
-# à modifier, pour garder le move à faire et le renvoyer, genre si on est revenu à la racine de la récursion on regarde quel est le move avec le plus gros node_val et on renvoie cette valeur
-        node_val = None
-        for a_move in self._board.legal_moves()]:
-            self._board.push(a_move)
-            if node_val == None:
-                node_val = MiniMax()
-            elif Reversi._nextPlayer == self._mycolor:
-                node_val = max(node_val,MiniMax())
-            else:
-                node_val = min(node_val,MiniMax())
-            self._board.pop()
-        return node_val
-# ne plus modifier
+    # Neg alpha beta
 
-    def MiniMaxWithHeuristique():
-        
+    def negAlphaBeta(self, depth, alpha, beta):
+
+        # Si le jeu est terminé, on renvoie la valeur de l'heuristique
+        # On va aussi utiliser une profondeur d'arrêt
+        if depth == 0 or self._board.is_game_over():
+            # print("Reached the end!")
+            return (None, self.heuristicMethod(self._board))
+
+        # Le coup a retourné, celui à jouer
+        moveToPlay = None
+
+        # On parcourt la liste des coups valides
+        for move in self._board.legal_moves():
+
+            # On joue le premier coup valide
+            self._board.push(move)
+
+            # Recursivité pour parcourir l'arbre
+            # On diminue la profondeur de un afin d'être sûr de s'arrêter
+            (_, val) = self.negAlphaBeta(depth - 1, -beta, -alpha)
+            val = - val
+
+            # On retire le coup que nous venos de jouer
+            self._board.pop()
+
+            # Si la valeur récupéré est meilleure que notre pire coup
+            if val > alpha:
+                moveToPlay = move
+                alpha = val
+
+                # Si le pire coup est meilleur que tout meilleur coup (élagage)
+                if alpha > beta:
+                    return (moveToPlay, alpha)
+
+        return (moveToPlay, alpha)
+
+    # La fonction heuristique, après quelques recherches :
+
+    # Un palet placé dans un coin vaut des points car il ne peut pas être pris
+    # Un palet juste à côté d'un coin est très mauvais car ilest garanti d'être
+    # pris
+
+    # Un palet dans un coin vaut plus de points en début qu'en fin de partie
+
+    # Moins l'adversaire a de possibilité de mouvement après le coup plus ce
+    # coup est intéressant
+
+    # Plus le palet joué est entouré d'autres palets mieux c'est
+
+    # On peut mettre un poids sur chaque palet placé. Ce poids dépend des idées
+    # au-dessus (autre idée)
 
     # Returns your move. The move must be a couple of two integers,
     # Which are the coordinates of where you want to put your piece
@@ -49,51 +84,28 @@ class myPlayer(PlayerInterface):
         if self._board.is_game_over(): # si game_over
             print("Referee told me to play but the game is over!")
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
-        moves = [m for m in self._board.legal_moves()] #liste des coups à pouvoir être joués
-# à modifier
-        #move = moves[randint(0,len(moves)-1)] #prend aléatoirement un coup à faire
-# ne plus modifier
+
+        (move, _) = self.negAlphaBeta(4, self.minInt, self.maxInt)
+
         self._board.push(move) #joue le coup choisi dans move
+
         print("I am playing ", move)
+
         (c,x,y) = move #la case sur laquelle jouer le coup move, (couleur, abscisse, ordonnée)
+
         assert(c==self._mycolor) #si pas la bonne couleur, problème
+
         print("My current board :")
+
         print(self._board)
+
         return (x,y) #renvoyer le coup à jouer
 
-
-# ma fonction minimax pour tic tac toe
-##global_node_count = 0
-##def strategie_gagnante_intelligente(b): # _X est ami, _O est ennemi
-##    # utiliser is_game_over pour les feuilles, et getresult pour leurs valeurs
-##    #_X veut du max
-##    #legal_move pour savoir quoi jouer, push ensuite
-##    #garder opti_move pour savoir quoi faire lorsqu'on remonte les valeurs
-##    global global_node_count
-##    global_node_count += 1
-##    if b.is_game_over():
-##        return getresult(b)
-##    node_val = None
-##    for a_move in b.legal_moves():
-##        b.push(a_move)
-##        if node_val == None:
-##            node_val = strategie_gagnante_intelligente(b)
-##        elif b._nextPlayer == b._X:
-##            if node_val != 1:
-##                node_val = max(node_val,strategie_gagnante_intelligente(b))
-##        else:
-##            if node_val != -1:
-##                node_val = min(node_val,strategie_gagnante_intelligente(b))
-##        b.pop()
-##    return node_val
-
-
-    
     # Inform you that the oponent has played this move. You must play it
     # with no search (just update your local variables to take it into account)
     def playOpponentMove(self, x,y):
         assert(self._board.is_valid_move(self._opponent, x, y))
-        print("Opponent played ", (x,y))
+        # print("Opponent played ", (x,y))
         self._board.push([self._opponent, x, y])
 
     # Starts a new game, and give you your color.
@@ -109,6 +121,3 @@ class myPlayer(PlayerInterface):
             print("I won!!!")
         else:
             print("I lost :(!!")
-
-
-

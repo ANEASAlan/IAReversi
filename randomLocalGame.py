@@ -36,7 +36,7 @@ while not b.is_game_over():
     nbmoves += 1
     otherplayer = (nextplayer + 1) % 2
     othercolor = b._BLACK if nextplayercolor == b._WHITE else b._WHITE
-    
+
     currentTime = time.time()
     sys.stdout = stringio
     move = players[nextplayer].getPlayerMove()
@@ -47,7 +47,7 @@ while not b.is_game_over():
     outputs[nextplayer] += playeroutput
     totalTime[nextplayer] += time.time() - currentTime
     print("Player ", nextplayercolor, players[nextplayer].getPlayerName(), "plays" + str(move))
-    (x,y) = move 
+    (x,y) = move
     if not b.is_valid_move(nextplayercolor,x,y):
         print(otherplayer, nextplayer, nextplayercolor)
         print("Problem: illegal move")
@@ -71,5 +71,3 @@ elif nbblacks > nbwhites:
     print("BLACK")
 else:
     print("DEUCE")
-
-

@@ -28,11 +28,11 @@ class randomPlayer(PlayerInterface):
         assert(c==self._mycolor)
         print("My current board :")
         print(self._board)
-        return (x,y) 
+        return (x,y)
 
     def playOpponentMove(self, x,y):
         assert(self._board.is_valid_move(self._opponent, x, y))
-        print("Opponent played ", (x,y))
+        # print("Opponent played ", (x,y))
         self._board.push([self._opponent, x, y])
 
     def newGame(self, color):
@@ -44,6 +44,3 @@ class randomPlayer(PlayerInterface):
             print("I won!!!")
         else:
             print("I lost :(!!")
-
-
-
