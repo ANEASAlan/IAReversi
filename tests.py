@@ -22,12 +22,12 @@ def assignColors(player1, player2):
 
 def printWinner(board, totalTime):
 
-    # print("The game is over")
-    # print(board)
+    # # print("The game is over")
+    # # print(board)
 
     (nbwhites, nbblacks) = board.get_nb_pieces()
-    # print("Time:", totalTime)
-    # print("Winner: ", end="")
+    # # print("Time:", totalTime)
+    # # print("Winner: ", end="")
 
     if nbwhites > nbblacks:
         print("WHITE")
@@ -57,13 +57,13 @@ def play(board, players):
     sysstdout= sys.stdout
     stringio = StringIO()
 
-    # print(b.legal_moves())
+    # # print(b.legal_moves())
     while not board.is_game_over():
 
-        # print("Referee Board:")
-        # print(board)
-        # print("Before move", nbmoves)
-        # print("Legal Moves: ", b.legal_moves())
+        # # print("Referee Board:")
+        # # print(board)
+        # # print("Before move", nbmoves)
+        # # print("Legal Moves: ", b.legal_moves())
 
         nbmoves += 1
         otherplayer = (nextplayer + 1) % 2
@@ -76,15 +76,15 @@ def play(board, players):
         playeroutput = "\r" + stringio.getvalue()
         stringio.truncate(0)
 
-        # print(("[Player "+str(nextplayer) + "] ").join(playeroutput.splitlines(True)))
+        # # print(("[Player "+str(nextplayer) + "] ").join(playeroutput.splitlines(True)))
         outputs[nextplayer] += playeroutput
         totalTime[nextplayer] += time.time() - currentTime
-        # print("Player ", nextplayercolor, players[nextplayer].getPlayerName(), "plays" + str(move))
+        # # print("Player ", nextplayercolor, players[nextplayer].getPlayerName(), "plays" + str(move))
         (x,y) = move
 
         if not board.is_valid_move(nextplayercolor,x,y):
-            print(otherplayer, nextplayer, nextplayercolor)
-            print("Problem: illegal move")
+            # print(otherplayer, nextplayer, nextplayercolor)
+            # print("Problem: illegal move")
             break
 
         board.push([nextplayercolor, x, y])
@@ -93,7 +93,7 @@ def play(board, players):
         nextplayer = otherplayer
         nextplayercolor = othercolor
 
-        # print(board)
+        # # print(board)
 
     return totalTime
 
@@ -114,7 +114,6 @@ def countingCorners(board):
 
     # This stores the number of disks in the corners
     # A white one is worth 3 and a black one is worth -3
-    # The count is negative if this is the foe's turn (*** TO DO ***)
     # So far, the state of the game doesn't matter, it should (** TO DO **)
     cornerCount = 0
     cornerCount += cornerCountingMethod(board, size, 0, 0)
@@ -122,6 +121,51 @@ def countingCorners(board):
     cornerCount += cornerCountingMethod(board, size, size - 1, 0)
     cornerCount += cornerCountingMethod(board, size, size - 1, size - 1)
     return cornerCount
+
+def countingColors(board):
+    # To parse the board you want to do a double for loop
+    # Best case would be to do it all in a unique loop but that's
+    # difficult
+
+    # The board is a square
+    size = board.get_board_size()
+
+    # The board to use, to avoid multiple dots
+    board = board._board
+
+    count = 0
+
+    # This stores the number of disks of each colors
+    # A white one is worth 1 point and a black one -1
+    for x in range(size):
+        for y in range(size):
+            if isWhite(board, x, y):
+                count += 1
+            elif isBlack(board, x, y):
+                count -= 1
+    return count
+
+def coutingColumnsAndLines(board):
+    # To parse the board you want to do a double for loop
+    # Best case would be to do it all in a unique loop but that's
+    # difficult
+
+    # The board is a square
+    size = board.get_board_size()
+
+    # The board to use, to avoid multiple dots
+    board = board._board
+
+    count = 0
+
+    for x in range(size):
+        streak = [0, 0]
+        tmp = [0, 0]
+        for y in range(size):
+            (tmp[0], streak[0]) = countingLineCol(board, x, y, tmp[0], streak[0])
+            (tmp[1], streak[1]) = countingLineCol(board, y, x, tmp[1], streak[1])
+
+    return streak[0] + streak[1]
 
 ################################################################################
 ######################## Utility functions #####################################
@@ -176,6 +220,25 @@ def cornerCountingMethod(board, size, x, y):
 
     return 0
 
+def countingLineCol(board, x, y, tmp, streak):
+    if isWhite(board, x, y) and tmp >= 0:
+        tmp += 1
+
+    elif isWhite(board, x, y) and tmp < 0:
+        tmp = 1
+        if abs(tmp) > abs(streak):
+            streak = tmp
+
+    if isBlack(board, x, y) and tmp <= 0:
+        tmp -= 1
+
+    elif isBlack(board, x, y) and tmp > 0:
+        tmp = -1
+        if abs(tmp) > abs(streak):
+            streak = tmp
+
+    return (tmp, streak)
+
 ################################################################################
 ######################################## CODE ##################################
 ################################################################################
@@ -200,4 +263,4 @@ for i in range(10):
 
     addPoints(count, res)
 
-print(count)
+# print(count)

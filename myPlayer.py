@@ -27,7 +27,7 @@ class myPlayer(PlayerInterface):
         # Si le jeu est terminé, on renvoie la valeur de l'heuristique
         # On va aussi utiliser une profondeur d'arrêt
         if depth == 0 or self._board.is_game_over():
-            # print("Reached the end!")
+            # # print("Reached the end!")
             return (None, self.heuristicMethod(self._board))
 
         # Le coup a retourné, celui à jouer
@@ -82,22 +82,22 @@ class myPlayer(PlayerInterface):
     # call your function if the game is over
     def getPlayerMove(self): # à modifier
         if self._board.is_game_over(): # si game_over
-            print("Referee told me to play but the game is over!")
+            # print("Referee told me to play but the game is over!")
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
-        (move, _) = self.negAlphaBeta(4, self.minInt, self.maxInt)
+        (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
 
         self._board.push(move) #joue le coup choisi dans move
 
-        print("I am playing ", move)
+        # print("I am playing ", move)
 
         (c,x,y) = move #la case sur laquelle jouer le coup move, (couleur, abscisse, ordonnée)
 
         assert(c==self._mycolor) #si pas la bonne couleur, problème
 
-        print("My current board :")
+        # print("My current board :")
 
-        print(self._board)
+        # print(self._board)
 
         return (x,y) #renvoyer le coup à jouer
 
@@ -105,7 +105,7 @@ class myPlayer(PlayerInterface):
     # with no search (just update your local variables to take it into account)
     def playOpponentMove(self, x,y):
         assert(self._board.is_valid_move(self._opponent, x, y))
-        # print("Opponent played ", (x,y))
+        # # print("Opponent played ", (x,y))
         self._board.push([self._opponent, x, y])
 
     # Starts a new game, and give you your color.
@@ -118,6 +118,8 @@ class myPlayer(PlayerInterface):
     # This function gives you the color of the winner
     def endGame(self, winner):
         if self._mycolor == winner:
-            print("I won!!!")
+            pass
+            # print("I won!!!")
         else:
-            print("I lost :(!!")
+            pass
+            # print("I lost :(!!")
