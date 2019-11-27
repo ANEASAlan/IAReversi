@@ -20,18 +20,30 @@ class myPlayer(PlayerInterface):
     def getPlayerName(self):
         return "ANEAS DE CASTRO PINTO"
 
+    def reverseColor(self, color):
+        if color == self._board._BLACK:
+            return self._board._WHITE
+        return self._board._BLACK
+
     # Neg alpha beta
 
-    def negAlphaBeta(self, depth, alpha, beta):
+    def negAlphaBeta(self, depth, alpha, beta, color=None):
+
+        if color == None:
+            color = self._mycolor
 
         # Si le jeu est terminé, on renvoie la valeur de l'heuristique
         # On va aussi utiliser une profondeur d'arrêt
         if depth == 0 or self._board.is_game_over():
             # # print("Reached the end!")
-            return (None, self.heuristicMethod(self._board))
+            if color == self._mycolor:
+                return (None, self.heuristicMethod(self._board))
+            else:
+                return (None, - self.heuristicMethod(self._board))
 
         # Le coup a retourné, celui à jouer
         moveToPlay = None
+        maxVal = self.minInt
 
         # On parcourt la liste des coups valides
         for move in self._board.legal_moves():
@@ -41,16 +53,17 @@ class myPlayer(PlayerInterface):
 
             # Recursivité pour parcourir l'arbre
             # On diminue la profondeur de un afin d'être sûr de s'arrêter
-            (_, val) = self.negAlphaBeta(depth - 1, -beta, -alpha)
-            val = - val
+            (_, val) = self.negAlphaBeta(depth - 1, -beta, -alpha, self.reverseColor(color))
 
             # On retire le coup que nous venos de jouer
             self._board.pop()
 
+            maxVal = max(-val, maxVal)
+
             # Si la valeur récupéré est meilleure que notre pire coup
-            if val > alpha:
+            if maxVal > alpha:
                 moveToPlay = move
-                alpha = val
+                alpha = maxVal
 
                 # Si le pire coup est meilleur que tout meilleur coup (élagage)
                 if alpha > beta:
@@ -85,7 +98,7 @@ class myPlayer(PlayerInterface):
             # print("Referee told me to play but the game is over!")
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
-        (move, _) = self.negAlphaBeta(4, self.minInt, self.maxInt)
+        (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
 
         self._board.push(move) #joue le coup choisi dans move
 
