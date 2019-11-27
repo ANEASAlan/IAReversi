@@ -6,10 +6,24 @@ from io import StringIO
 import pygame
 import sys
 import random
+import myPlayerAlix
 
 # REAME :
 #-pour lancer les tests : python3 testUI.py
 #-pour activer l'interface graphique : python3 testUI.py UI
+
+boardPoints = [
+    [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
+    [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+    [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+    [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+    [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+    [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+    [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+    [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+    [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+    [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
+]
 
 withUI = False
 
@@ -37,7 +51,7 @@ def update(b):
 def initUI():
 
     global screen, cW, cB, cE
-    
+
     ## Initialize pygame
     pygame.init()
 
@@ -119,9 +133,9 @@ def play(board, players):
         othercolor = board._BLACK if nextplayercolor == board._WHITE else board._WHITE
 
         currentTime = time.time()
-        sys.stdout = stringio
+        # sys.stdout = stringio
         move = players[nextplayer].getPlayerMove()
-        sys.stdout = sysstdout
+        # sys.stdout = sysstdout
         playeroutput = "\r" + stringio.getvalue()
         stringio.truncate(0)
 
@@ -173,7 +187,7 @@ def countingCorners(board):
     cornerCount += cornerCountingMethod(board, size, 0, size - 1)
     cornerCount += cornerCountingMethod(board, size, size - 1, 0)
     cornerCount += cornerCountingMethod(board, size, size - 1, size - 1)
-    return cornerCount
+    return 3 * cornerCount
 
 def countingColors(board):
     # To parse the board you want to do a double for loop
@@ -198,7 +212,7 @@ def countingColors(board):
                 count -= 1
     return count
 
-def coutingColumnsAndLines(board):
+def countingColumnsAndLines(board):
     # To parse the board you want to do a double for loop
     # Best case would be to do it all in a unique loop but that's
     # difficult
@@ -220,9 +234,61 @@ def coutingColumnsAndLines(board):
 
     return streak[0] + streak[1]
 
+def nbLegalMoves(board):
+    # To parse the board you want to do a double for loop
+    # Best case would be to do it all in a unique loop but that's
+    # difficult
+
+    # The board is a square
+    size = board.get_board_size()
+
+    player = board._nextPlayer
+
+    moveCount = 0
+    points = 0
+    colors = 0
+
+    if player == board._WHITE:
+        moveCount += len(board.legal_moves())
+    else:
+        moveCount -= len(board.legal_moves())
+
+    board = board._board
+
+    for x in range(size):
+        for y in range(size):
+            colors += colorCounting(board, size, x, y)
+            points += countPointsPerPos(board, x, y)
+    return moveCount + colors + points
+
+def monteCarlo(board):
+    # To parse the board you want to do a double for loop
+    # Best case would be to do it all in a unique loop but that's
+    # difficult
+
+    # The board is a square
+    size = board.get_board_size()
+
+    # The board to use, to avoid multiple dots
+    board = board._board
+
+    points = 0
+
+    for x in range(size):
+        for y in range(size):
+            points += countPointsPerPos(board, x, y)
+    return points
+
 ################################################################################
 ######################## Utility functions #####################################
 ################################################################################
+
+def countPointsPerPos(board, x, y):
+    if isWhite(board, x, y):
+        return boardPoints[x][y]
+    elif isBlack(board, x, y):
+        return - boardPoints[x][y]
+    return 0
 
 # Cette fonction teste si une position est dans le coin de la table
 def isCorner(size, x, y):
@@ -266,12 +332,63 @@ def cornerCountingMethod(board, size, x, y):
     if isCorner(size, x, y):
 
         if isWhite(board, x, y):
-            return 3
+            return 1
 
         if isBlack(board, x, y):
-            return -3
+            return -1
 
     return 0
+
+def nextToCorner(board, size, x, y):
+
+    if isNextToCorner(size, x, y):
+
+        if isWhite(board, x, y):
+            return -1
+
+        if isBlack(board, x, y):
+            return 1
+
+    return 0
+
+def isNextToCorner(size, x, y):
+    if x == size - 2 and y == 0:
+        return True
+
+    if x == size - 2 and y == 1:
+        return True
+
+    if x == size - 1 and y == 1:
+        return True
+
+    if x == 1 and y == 0:
+        return True
+
+    if x == 1 and y == 1:
+        return True
+
+    if x == 0 and y == 1:
+        return True
+
+    if x == size - 2 and y == size - 1:
+        return True
+
+    if x == size - 2 and y == size - 2:
+        return True
+
+    if x == size - 1 and y == size - 2:
+        return True
+
+    if x == 1 and y == size - 1:
+        return True
+
+    if x == 0 and y == size - 2:
+        return True
+
+    if x == 1 and y == size - 2:
+        return True
+
+    return False
 
 def countingLineCol(board, x, y, tmp, streak):
     if isWhite(board, x, y) and tmp >= 0:
@@ -292,6 +409,13 @@ def countingLineCol(board, x, y, tmp, streak):
 
     return (tmp, streak)
 
+def colorCounting(board, size, x, y):
+    if isWhite(board, x, y):
+        return 1
+    elif isBlack(board, x, y):
+        return -1
+    return 0
+
 ################################################################################
 ######################################## CODE ##################################
 ################################################################################
@@ -306,8 +430,8 @@ if withUI : initUI()
 for i in range(10):
     board = createBoard(10)
 
-    player1 = myPlayer.myPlayer(countingCorners)
-    player2 = randomPlayer.randomPlayer()
+    player1 = myPlayer.myPlayer(nbLegalMoves)  # myPlayerAlix.myPlayer()
+    player2 = myPlayerAlix.myPlayer()
 
     players = assignColors(player1, player2)
 

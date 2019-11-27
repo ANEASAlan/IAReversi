@@ -22,8 +22,8 @@ class NodeValue():
 
 class myPlayer(PlayerInterface):
 
-    def __init__(self, heuristicMethod, boardSize): # penser à enelever les arguments (sauf self)
-        self._board = Reversi.Board(boardSize)
+    def __init__(self, heuristicMethod): # penser à enelever les arguments (sauf self)
+        self._board = Reversi.Board(10)
         self._mycolor = None
         self.minInt = - 2 ** 64
         self.maxInt = - self.minInt
@@ -62,8 +62,6 @@ class myPlayer(PlayerInterface):
                     piece = board[x][y]
                     hash = hash ^ self.table[x * size + y][piece]
         return hash
-
-
 
     # Neg alpha beta
 
@@ -106,7 +104,7 @@ class myPlayer(PlayerInterface):
                 alpha = maxVal
 
                 # Si le pire coup est meilleur que tout meilleur coup (élagage)
-                if alpha > beta:
+                if alpha >= beta:
                     return (moveToPlay, alpha)
 
         return (moveToPlay, alpha)
@@ -116,9 +114,14 @@ class myPlayer(PlayerInterface):
     def negAlphaBetaWithMemory(self, depth, alpha, beta, color=None, hash=None):
         alphaOrig = alpha
 
-        if self.table == [] or hash == None:
+        if self.table == []:
             self.generateBaseHash()
+
+        if hash == None:
             hash = self.computeHash()
+
+        if color == None:
+            color = self._mycolor
 
         if hash in self.memory:
             nodeVal = self.memory[hash]
@@ -126,13 +129,15 @@ class myPlayer(PlayerInterface):
 
                 if nodeVal.flag == Flag.VALUE:
                     return (None, nodeVal.value)
-                elif nodeVal.flag == Flag.LOW:
 
+                elif nodeVal.flag == Flag.LOW:
                     alpha = max(alpha, nodeVal.value)
 
                 else:
-
                     beta = min(beta, nodeVal.value)
+
+                if alpha >= beta:
+                    return (None, nodeVal.value)
 
 
         # Si le jeu est terminé, on renvoie la valeur de l'heuristique
@@ -170,90 +175,19 @@ class myPlayer(PlayerInterface):
                 alpha = maxVal
 
                 # Si le pire coup est meilleur que tout meilleur coup (élagage)
-                if alpha > beta:
+                if alpha >= beta:
                     break
 
-        nodeVal = NodeValue(alpha, depth)
-        if alpha <= alphaOrig:
+        nodeVal = NodeValue(maxVal, depth)
+        if maxVal <= alphaOrig:
             nodeVal.flag = Flag.UP
-        elif alpha >= beta:
+        elif maxVal >= beta:
             nodeVal.flag = Flag.LOW
         else:
             nodeVal.flag = Flag.VALUE
 
         self.memory[hash] = nodeVal
-        return (moveToPlay, alpha)
-
-
-    def negAlphaBetaWithMemoryFM(self, depth, alpha, beta, color=None, hash=None):
-        alphaOrig = alpha
-
-        if self.table == [] or hash == None:
-            self.generateBaseHash()
-            hash = self.computeHash()
-
-        if hash in self.memory:
-            nodeVal = self.memory[hash]
-            if nodeVal.depth >= depth:
-
-                if nodeVal.flag == Flag.VALUE:
-                    return (None, nodeVal.value)
-                elif nodeVal.flag == Flag.LOW:
-
-                    alpha = max(alpha, nodeVal.value)
-
-                else:
-
-                    beta = min(beta, nodeVal.value)
-
-
-        # Si le jeu est terminé, on renvoie la valeur de l'heuristique
-        # On va aussi utiliser une profondeur d'arrêt
-        if depth == 0 or self._board.is_game_over():
-            # # print("Reached the end!")
-            if color == self._mycolor:
-                return (None, self.heuristicMethod(self._board))
-            else:
-                return (None, - self.heuristicMethod(self._board))
-
-        # Le coup a retourné, celui à jouer
-        moveToPlay = None
-        maxVal = self.minInt
-
-        move = self._board.legal_moves()[0]
-
-        # On joue le premier coup valide
-        self._board.push(move)
-        tmpHash = hash ^ (self.table[move[1] * self._board.get_board_size() + move[2]][move[0]])
-
-        # Recursivité pour parcourir l'arbre
-        # On diminue la profondeur de un afin d'être sûr de s'arrêter
-        (_, val) = self.negAlphaBetaWithMemory(depth - 1, -beta, -alpha, self.reverseColor(color), tmpHash)
-
-        # On retire le coup que nous venos de jouer
-        self._board.pop()
-
-        maxVal = max(-val, maxVal)
-
-        # Si la valeur récupéré est meilleure que notre pire coup
-        if maxVal > alpha:
-            moveToPlay = move
-            alpha = maxVal
-
-            # Si le pire coup est meilleur que tout meilleur coup (élagage)
-            #if alpha > beta:
-            #    break
-
-        nodeVal = NodeValue(alpha, depth)
-        if alpha <= alphaOrig:
-            nodeVal.flag = Flag.UP
-        elif alpha >= beta:
-            nodeVal.flag = Flag.LOW
-        else:
-            nodeVal.flag = Flag.VALUE
-
-        self.memory[hash] = nodeVal
-        return (move, alpha)
+        return (moveToPlay, maxVal)
 
     # La fonction heuristique, après quelques recherches :
 
@@ -283,10 +217,10 @@ class myPlayer(PlayerInterface):
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
         # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
-        (move, heur1) = self.negAlphaBetaWithMemoryFM(4, self.minInt, self.maxInt)
+        (move, heur1) = self.negAlphaBetaWithMemory(4, self.minInt, self.maxInt)
         # (move2, heur2) = self.negAlphaBeta(4, self.minInt, self.maxInt)
 
-        print("Result = " + str(move) + " / " + str(heur1))
+        # print("Result = " + str(move) + " / " + str(heur1))
         # print("Expected = " + str(move2) + " / " + str(heur2))
 
         self._board.push(move) #joue le coup choisi dans move
