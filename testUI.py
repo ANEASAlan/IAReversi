@@ -7,6 +7,10 @@ import pygame
 import sys
 import random
 
+# REAME :
+#-pour lancer les tests : python3 testUI.py
+#-pour activer l'interface graphique : python3 testUI.py UI
+
 withUI = False
 
 argv = sys.argv
