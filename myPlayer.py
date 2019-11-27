@@ -85,7 +85,7 @@ class myPlayer(PlayerInterface):
             # print("Referee told me to play but the game is over!")
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
-        (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
+        (move, _) = self.negAlphaBeta(4, self.minInt, self.maxInt)
 
         self._board.push(move) #joue le coup choisi dans move
 
