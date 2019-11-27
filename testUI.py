@@ -7,6 +7,17 @@ import pygame
 import sys
 import random
 
+withUI = False
+
+argv = sys.argv
+if len(argv) > 1 and argv[1] == "UI" :
+    withUI = True
+
+screen = None
+cW = None
+cB = None
+cE = None
+
 ## Update the board
 def update(b):
     for posX in range(10):
@@ -19,23 +30,26 @@ def update(b):
                 screen.blit(cE,(posX*32,posY*32))
     pygame.display.flip()
 
-## Initialize pygame
-pygame.init()
+def initUI():
 
-## Set screen
-screen = pygame.display.set_mode((320,320))
+    global screen, cW, cB, cE
+    
+    ## Initialize pygame
+    pygame.init()
 
-## Set Refresh
-clock = pygame.time.Clock()
-FPS = 60
-clock.tick(FPS)
+    ## Set screen
+    screen = pygame.display.set_mode((320,320))
 
-## Load image
-cW = pygame.image.load("White.png")
-cB = pygame.image.load("Black.png")
-cE = pygame.image.load("Empty.png")
+    ## Set Refresh
+    clock = pygame.time.Clock()
+    FPS = 60
+    clock.tick(FPS)
 
-done = True
+    ## Load image
+    cW = pygame.image.load("White.png")
+    cB = pygame.image.load("Black.png")
+    cE = pygame.image.load("Empty.png")
+
 
 def createBoard(size):
     return Reversi.Board(size)
@@ -120,7 +134,8 @@ def play(board, players):
 
         board.push([nextplayercolor, x, y])
 
-        update(board)
+        if withUI :
+            update(board)
 
         players[otherplayer].playOpponentMove(x,y)
 
@@ -281,6 +296,8 @@ count = {
     'Corners' : 0,
     'Random' : 0
 }
+
+if withUI : initUI()
 
 for i in range(10):
     board = createBoard(10)
