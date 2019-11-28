@@ -7,6 +7,12 @@ import pygame
 import sys
 import random
 import myPlayerAlix
+import myPlayerTitouan
+
+sys.path.insert(1, 'Heuristics/Easy')
+
+# Nos heuristiques
+import CornersCounting
 
 # REAME :
 #-pour lancer les tests : python3 testUI.py
@@ -105,10 +111,10 @@ def printWinner(board, totalTime):
 def addPoints(count, res):
 
     if res == 1:
-        count['Corners'] += 1
+        count['Black'] += 1
 
     elif res == 0:
-        count['Random'] += 1
+        count['White'] += 1
 
 def play(board, players):
     totalTime = [0,0] # total real time for each player
@@ -133,9 +139,9 @@ def play(board, players):
         othercolor = board._BLACK if nextplayercolor == board._WHITE else board._WHITE
 
         currentTime = time.time()
-        # sys.stdout = stringio
+        sys.stdout = stringio
         move = players[nextplayer].getPlayerMove()
-        # sys.stdout = sysstdout
+        sys.stdout = sysstdout
         playeroutput = "\r" + stringio.getvalue()
         stringio.truncate(0)
 
@@ -234,7 +240,7 @@ def countingColumnsAndLines(board):
 
     return streak[0] + streak[1]
 
-def nbLegalMoves(board):
+def nbLegalMoves(board, move):
     # To parse the board you want to do a double for loop
     # Best case would be to do it all in a unique loop but that's
     # difficult
@@ -247,6 +253,10 @@ def nbLegalMoves(board):
     moveCount = 0
     points = 0
     colors = 0
+    nbWhite = 0
+    nbBlack = 0
+    cornerCount = 0
+    streak = 0
 
     if player == board._WHITE:
         moveCount += len(board.legal_moves())
@@ -254,12 +264,44 @@ def nbLegalMoves(board):
         moveCount -= len(board.legal_moves())
 
     board = board._board
+    # points = countPointsPerPos(board, move[1], move[2])
 
     for x in range(size):
+        tmp = [0, 0]
         for y in range(size):
             colors += colorCounting(board, size, x, y)
             points += countPointsPerPos(board, x, y)
-    return moveCount + colors + points
+            if isBlack(board, x, y):
+                nbBlack += 1
+            if isWhite(board, x, y):
+                nbWhite += 1
+
+    if nbBlack == 0:
+        return 10000
+    if nbWhite == 0:
+        return -10000
+
+    cornerCount += cornerCountingMethod(board, size, 0, 0)
+    cornerCount += cornerCountingMethod(board, size, 0, size - 1)
+    cornerCount += cornerCountingMethod(board, size, size - 1, 0)
+    cornerCount += cornerCountingMethod(board, size, size - 1, size - 1)
+
+    totalNbPieces = nbBlack + nbWhite
+    colors = nbWhite - nbBlack
+
+    # if isCorner(size, move[1], move[2]):
+    #     if move[0] == 1:
+    #         corner = 100 + 900 * totalNbPieces // 85
+    #     else:
+    #         corner = -100 - 900 * totalNbPieces // 85
+
+    moveCountWeight = moveCount  * (1.5 - totalNbPieces / 100.0) ** 10
+    colorsWeight = colors * (0.05 + totalNbPieces / 100.0) ** 20
+    pointsWeight = points * (3.0 - totalNbPieces / 100.0) ** 4
+    cornerWeight = cornerCount * (2.0 - totalNbPieces / 100.0) ** 5
+    # print(cornerWeight)
+
+    return moveCountWeight + pointsWeight + cornerWeight + colorsWeight
 
 def monteCarlo(board):
     # To parse the board you want to do a double for loop
@@ -282,6 +324,11 @@ def monteCarlo(board):
 ################################################################################
 ######################## Utility functions #####################################
 ################################################################################
+
+def isEmpty(board, x, y):
+    if board[x][y] == 0:
+        return True
+    return False
 
 def countPointsPerPos(board, x, y):
     if isWhite(board, x, y):
@@ -421,17 +468,21 @@ def colorCounting(board, size, x, y):
 ################################################################################
 
 count = {
-    'Corners' : 0,
-    'Random' : 0
+    'Black' : 0,
+    'White' : 0
 }
 
 if withUI : initUI()
 
-for i in range(10):
+# board = createBoard(10)
+# player = myPlayer.myPlayer(CornersCounting.heuristic, 0)
+# print(player.heuristicMethod(board, []))
+
+for i in range(1000):
     board = createBoard(10)
 
-    player1 = myPlayer.myPlayer(nbLegalMoves)  # myPlayerAlix.myPlayer()
-    player2 = myPlayerAlix.myPlayer()
+    player1 = myPlayer.myPlayer(CornersCounting.heuristic, 5)  # myPlayerAlix.myPlayer()
+    player2 = randomPlayer.randomPlayer()
 
     players = assignColors(player1, player2)
 
@@ -441,4 +492,4 @@ for i in range(10):
 
     addPoints(count, res)
 
-# print(count)
+print(count)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ''' Fichier de règles du Reversi pour le tournoi Masters Info 2019 en IA.
-    Certaines parties de ce code sont fortement inspirées de 
+    Certaines parties de ce code sont fortement inspirées de
     https://inventwithpython.com/chapter15.html
 
     '''
@@ -15,9 +15,9 @@
     #def get_nb_pieces(self):
 
     #def is_valid_move(self, player, x, y):
-        
+
     #def _isOnBoard(self,x,y):
-        
+
     #def testAndBuild_ValidMove(self, player, xstart, ystart):
 
     #def lazyTest_ValidMove(self, player, xstart, ystart):
@@ -70,23 +70,25 @@ class Board:
       for x in range(self._boardsize):
           self._board.append([self._EMPTY]* self._boardsize)
       _middle = int(self._boardsize / 2)
-      self._board[_middle-1][_middle-1] = self._BLACK 
+      self._board[_middle-1][_middle-1] = self._BLACK
       self._board[_middle-1][_middle] = self._WHITE
       self._board[_middle][_middle-1] = self._WHITE
-      self._board[_middle][_middle] = self._BLACK 
-      
+      self._board[_middle][_middle] = self._BLACK
+
       self._stack= []
       self._successivePass = 0
+      self.corners = []
+      self.computeCorners()
 
     def reset(self):
         self.__init__()
 
-    # Donne la taille du plateau 
+    # Donne la taille du plateau
     def get_board_size(self):
         return self._boardsize
 
     # Donne le nombre de pieces de blanc et noir sur le plateau
-    # sous forme de tuple (blancs, noirs) 
+    # sous forme de tuple (blancs, noirs)
     # Peut être utilisé si le jeu est terminé pour déterminer le vainqueur
     def get_nb_pieces(self):
       return (self._nbWHITE, self._nbBLACK)
@@ -98,7 +100,7 @@ class Board:
         return self.lazyTest_ValidMove(player,x,y)
 
     def _isOnBoard(self,x,y):
-        return x >= 0 and x < self._boardsize and y >= 0 and y < self._boardsize 
+        return x >= 0 and x < self._boardsize and y >= 0 and y < self._boardsize
 
     # Renvoie la liste des pieces a retourner si le coup est valide
     # Sinon renvoie False
@@ -107,15 +109,15 @@ class Board:
     def testAndBuild_ValidMove(self, player, xstart, ystart):
         if self._board[xstart][ystart] != self._EMPTY or not self._isOnBoard(xstart, ystart):
             return False
-    
-        self._board[xstart][ystart] = player # On pourra remettre _EMPTY ensuite 
-    
+
+        self._board[xstart][ystart] = player # On pourra remettre _EMPTY ensuite
+
         otherPlayer = self._flip(player)
-    
+
         tilesToFlip = [] # Si au moins un coup est valide, on collecte ici toutes les pieces a retourner
         for xdirection, ydirection in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
             x, y = xstart, ystart
-            x += xdirection 
+            x += xdirection
             y += ydirection
             if self._isOnBoard(x, y) and self._board[x][y] == otherPlayer:
                 # There is a piece belonging to the other player next to our piece.
@@ -137,7 +139,7 @@ class Board:
                         if x == xstart and y == ystart:
                             break
                         tilesToFlip.append([x, y])
-    
+
         self._board[xstart][ystart] = self._EMPTY # restore the empty space
         if len(tilesToFlip) == 0: # If no tiles were flipped, this is not a valid move.
             return False
@@ -147,14 +149,14 @@ class Board:
     def lazyTest_ValidMove(self, player, xstart, ystart):
         if self._board[xstart][ystart] != self._EMPTY or not self._isOnBoard(xstart, ystart):
             return False
-    
-        self._board[xstart][ystart] = player # On pourra remettre _EMPTY ensuite 
-    
+
+        self._board[xstart][ystart] = player # On pourra remettre _EMPTY ensuite
+
         otherPlayer = self._flip(player)
-    
+
         for xdirection, ydirection in [[0, 1], [1, 1], [1, 0], [1, -1], [0, -1], [-1, -1], [-1, 0], [-1, 1]]:
             x, y = xstart, ystart
-            x += xdirection 
+            x += xdirection
             y += ydirection
             if self._isOnBoard(x, y) and self._board[x][y] == otherPlayer:
                 # There is a piece belonging to the other player next to our piece.
@@ -167,18 +169,18 @@ class Board:
                     y += ydirection
                     if not self._isOnBoard(x, y): # break out of while loop, then continue in for loop
                         break
-                if not self._isOnBoard(x, y): # On a au moins 
+                if not self._isOnBoard(x, y): # On a au moins
                     continue
-                if self._board[x][y] == player: # We are sure we can at least build this move. 
+                if self._board[x][y] == player: # We are sure we can at least build this move.
                     self._board[xstart][ystart] = self._EMPTY
                     return True
-                 
+
         self._board[xstart][ystart] = self._EMPTY # restore the empty space
         return False
 
     def _flip(self, player):
         if player == self._BLACK:
-            return self._WHITE 
+            return self._WHITE
         return self._BLACK
 
     def is_game_over(self):
@@ -186,7 +188,7 @@ class Board:
             return False
         if self.at_least_one_legal_move(self._flip(self._nextPlayer)):
             return False
-        return True 
+        return True
 
     def push(self, move):
         [player, x, y] = move
@@ -214,7 +216,7 @@ class Board:
     def pop(self):
         [move, self._successivePass, toflip] = self._stack.pop()
         [player,x,y] = move
-        self._nextPlayer = player 
+        self._nextPlayer = player
         if len(toflip) == 0: # pass
             assert x == -1 and y == -1
             return
@@ -257,6 +259,26 @@ class Board:
             return self._nbWHITE - self._nbBLACK
         return self._nbBLACK - self._nbWHITE
 
+    def computeCorners(self):
+        size = self._boardsize
+        for x in range(size):
+            tmp = []
+            for y in range(size):
+                if x == 0 and y == 0:
+                    tmp.append(1)
+                elif x == 0 and y == size - 1:
+                    tmp.append(1)
+                elif x == size - 1 and y == 0:
+                    tmp.append(1)
+                elif x == size - 1 and y == size - 1:
+                    tmp.append(1)
+                else:
+                    tmp.append(0)
+            self.corners.append(tmp)
+
+    def getCell(self, x, y):
+        return self._board[x][y]
+
     def _piece2str(self, c):
         if c==self._WHITE:
             return 'O'
@@ -277,5 +299,3 @@ class Board:
         return toreturn
 
     __repr__ = __str__
-
-

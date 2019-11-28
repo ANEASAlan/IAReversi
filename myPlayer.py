@@ -19,10 +19,11 @@ class NodeValue():
         self.value = value
         self.depth = depth
         self.flag = Flag.VALUE
+        self.startingDepth = 0
 
 class myPlayer(PlayerInterface):
 
-    def __init__(self, heuristicMethod): # penser à enelever les arguments (sauf self)
+    def __init__(self, heuristicMethod, maxTime): # penser à enelever les arguments (sauf self)
         self._board = Reversi.Board(10)
         self._mycolor = None
         self.minInt = - 2 ** 64
@@ -30,6 +31,8 @@ class myPlayer(PlayerInterface):
         self.heuristicMethod = heuristicMethod
         self.memory = {}
         self.table = []
+        self.time = 0
+        self.maxTime = maxTime
 
     # Returns your player name, as to be displayed during the game
     def getPlayerName(self):
@@ -111,7 +114,16 @@ class myPlayer(PlayerInterface):
 
     # Neg alpha beta with memory!
 
-    def negAlphaBetaWithMemory(self, depth, alpha, beta, color=None, hash=None):
+    def negAlphaBetaWithMemory(self, depth, alpha, beta, color=None, hash=None, playedMove=None):
+        elapsedTime = time.time() - self.time
+
+        if elapsedTime >= self.maxTime:
+            print(elapsedTime)
+            if color == self._mycolor:
+                return (None, self.heuristicMethod(self._board, playedMove))
+            else:
+                return (None, - self.heuristicMethod(self._board, playedMove))
+
         alphaOrig = alpha
 
         if self.table == []:
@@ -127,7 +139,7 @@ class myPlayer(PlayerInterface):
             nodeVal = self.memory[hash]
             if nodeVal.depth >= depth:
 
-                if nodeVal.flag == Flag.VALUE:
+                if self.startingDepth != depth and nodeVal.flag == Flag.VALUE:
                     return (None, nodeVal.value)
 
                 elif nodeVal.flag == Flag.LOW:
@@ -136,7 +148,7 @@ class myPlayer(PlayerInterface):
                 else:
                     beta = min(beta, nodeVal.value)
 
-                if alpha >= beta:
+                if self.startingDepth != depth and alpha >= beta:
                     return (None, nodeVal.value)
 
 
@@ -145,9 +157,9 @@ class myPlayer(PlayerInterface):
         if depth == 0 or self._board.is_game_over():
             # # print("Reached the end!")
             if color == self._mycolor:
-                return (None, self.heuristicMethod(self._board))
+                return (None, self.heuristicMethod(self._board, playedMove))
             else:
-                return (None, - self.heuristicMethod(self._board))
+                return (None, - self.heuristicMethod(self._board, playedMove))
 
         # Le coup a retourné, celui à jouer
         moveToPlay = None
@@ -159,10 +171,11 @@ class myPlayer(PlayerInterface):
             # On joue le premier coup valide
             self._board.push(move)
             tmpHash = hash ^ (self.table[move[1] * self._board.get_board_size() + move[2]][move[0]])
+            playedMove = move
 
             # Recursivité pour parcourir l'arbre
             # On diminue la profondeur de un afin d'être sûr de s'arrêter
-            (_, val) = self.negAlphaBetaWithMemory(depth - 1, -beta, -alpha, self.reverseColor(color), tmpHash)
+            (_, val) = self.negAlphaBetaWithMemory(depth - 1, -beta, -alpha, self.reverseColor(color), tmpHash, playedMove)
 
             # On retire le coup que nous venos de jouer
             self._board.pop()
@@ -177,6 +190,10 @@ class myPlayer(PlayerInterface):
                 # Si le pire coup est meilleur que tout meilleur coup (élagage)
                 if alpha >= beta:
                     break
+
+            elapsedTime = time.time() - self.time
+            if elapsedTime >= self.maxTime:
+                break
 
         nodeVal = NodeValue(maxVal, depth)
         if maxVal <= alphaOrig:
@@ -217,17 +234,33 @@ class myPlayer(PlayerInterface):
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
         # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
-        (move, heur1) = self.negAlphaBetaWithMemory(4, self.minInt, self.maxInt)
+        moveToPlay = None
+        self.time = time.time()
+        if randint(0, 100) == 0:
+            self.memory = {}
+        for i in range(1, 5):
+            self.startingDepth = i
+            (move, heur1) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt)
+            # print(move)
+            # print(heur1)
+            if move != None:
+                moveToPlay = move
+            elapsedTime = time.time() - self.time
+            if elapsedTime >= self.maxTime:
+                break
+        # print("Move played :")
+        # print(moveToPlay)
+        # print("------------")
         # (move2, heur2) = self.negAlphaBeta(4, self.minInt, self.maxInt)
 
         # print("Result = " + str(move) + " / " + str(heur1))
         # print("Expected = " + str(move2) + " / " + str(heur2))
 
-        self._board.push(move) #joue le coup choisi dans move
+        self._board.push(moveToPlay) #joue le coup choisi dans move
 
         # print("I am playing ", move)
 
-        (c,x,y) = move #la case sur laquelle jouer le coup move, (couleur, abscisse, ordonnée)
+        (c,x,y) = moveToPlay #la case sur laquelle jouer le coup move, (couleur, abscisse, ordonnée)
 
         assert(c==self._mycolor) #si pas la bonne couleur, problème
 
