@@ -1,21 +1,33 @@
 import Reversi
-import myPlayer
-import randomPlayer
 import time
 from io import StringIO
 import pygame
 import sys
 import random
-import myPlayerAlix
-import myPlayerTitouan
 
 sys.path.insert(1, 'Heuristics/Easy')
 sys.path.insert(1, 'Heuristics/Medium')
+sys.path.insert(1, 'Heuristics/Hard')
+
+sys.path.insert(1, 'OtherPlayer')
+
+# Les joueurs
+import myPlayer
+import randomPlayer
+import myPlayerAlix
+import myPlayerTitouan
 
 # Nos heuristiques
+# Easy
 import CornersCounting
 import ColorsCounting
+import MoveCounting
+import ColumnsLinesCounting
+
+# Medium
 import MonteCarlo
+
+# Hard
 
 # REAME :
 #-pour lancer les tests : python3 testUI.py
@@ -261,10 +273,7 @@ def nbLegalMoves(board, move):
     cornerCount = 0
     streak = 0
 
-    if player == board._WHITE:
-        moveCount += len(board.legal_moves())
-    else:
-        moveCount -= len(board.legal_moves())
+    moveCount = MoveCounting.heuristic(board, move)
 
     board = board._board
     # points = countPointsPerPos(board, move[1], move[2])

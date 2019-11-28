@@ -4,8 +4,5 @@ import Reversi
 # BLANC = 1
 # VIDE = 0
 
-def countingMoves(board):
-    if player == board._WHITE:
-        moveCount += len(board.legal_moves())
-    else:
-        moveCount -= len(board.legal_moves())
+def heuristic(board, move):
+    return len(board.legal_moves()) * (2 * board._nextPlayer - 3)
