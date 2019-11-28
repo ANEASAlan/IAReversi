@@ -38,22 +38,7 @@
 
     #def __str__(self)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import createTab
 
 class Board:
     _BLACK = 1
@@ -92,6 +77,12 @@ class Board:
           [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
           [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
       ]
+
+      self.powerCarlito1 = createTab.createTab(1, self._boardsize)
+      self.powerCarlito2 = createTab.createTab(2, self._boardsize)
+      self.powerCarlito3 = createTab.createTab(3, self._boardsize)
+      self.powerCarlito4 = createTab.createTab(4, self._boardsize)
+      self.powerCarlito5 = createTab.createTab(5, self._boardsize)
 
     def reset(self):
         self.__init__()
@@ -291,6 +282,16 @@ class Board:
 
     def getCell(self, x, y):
         return self._board[x][y]
+
+    def isWhite(self, x, y):
+        if self._board[x][y] == self._BLACK:
+            return False
+        return True
+
+    def isBlack(self, x, y):
+        if self._board[x][y] == self._WHITE:
+            return False
+        return True
 
     def _piece2str(self, c):
         if c==self._WHITE:

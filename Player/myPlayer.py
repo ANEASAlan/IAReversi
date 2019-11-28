@@ -117,7 +117,7 @@ class myPlayer(PlayerInterface):
     def negAlphaBetaWithMemory(self, depth, alpha, beta, color=None, hash=None, playedMove=None):
         elapsedTime = time.time() - self.time
 
-        if elapsedTime >= self.maxTime:
+        if self.startingDepth != depth and elapsedTime >= self.maxTime:
             print(elapsedTime)
             if color == self._mycolor:
                 return (None, self.heuristicMethod(self._board, playedMove))
@@ -236,9 +236,10 @@ class myPlayer(PlayerInterface):
         # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
         moveToPlay = None
         self.time = time.time()
-        if randint(0, 100) == 0:
-            self.memory = {}
-        for i in range(1, 5):
+        # if randint(0, 100) == 0:
+        #     self.memory = {}
+
+        for i in range(1, 3):
             self.startingDepth = i
             (move, heur1) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt)
             # print(move)

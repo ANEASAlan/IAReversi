@@ -33,6 +33,12 @@ import CornersCounting
 import ColorsCounting
 import MoveCounting
 import ColumnsLinesCounting
+import MonteCarlito1
+import MonteCarlito2
+import MonteCarlito3
+import MonteCarlito4
+import MonteCarlito5
+import Random
 
 # Medium
 import MonteCarlo
@@ -104,10 +110,54 @@ def nbLegalMoves(board, move):
     #
     # return moveCountWeight + pointsWeight + cornerWeight + colorsWeight
 
+def allPlayers(heuristics):
+    for black in heuristics:
+        for white in heuristics:
+            board = UI.createBoard(10)
 
-count = {
-    'Black' : 0,
-    'White' : 0
+            player1 = myPlayer.myPlayer(heuristics[black][0], 5)
+            player2 = myPlayer.myPlayer(heuristics[white][0], 5)
+
+            players = UI.assignColors(board, player1, player2)
+
+            t = UI.play(board, players, withUI)
+
+            res = UI.printWinner(board, t)
+
+            if res == 0:
+                heuristics[white][1].append(black)
+                heuristics[white][2] += 1
+                heuristics[black][3] += 1
+            elif res == 1:
+                heuristics[black][1].append(white)
+                heuristics[black][2] += 1
+                heuristics[white][3] += 1
+            else:
+                heuristics[white][1].append("Deuce " + str(black))
+                heuristics[black][1].append("Deuce " + str(white))
+                heuristics[black][4] += 1
+                heuristics[white][4] += 1
+
+    for key in heuristics:
+        print("------------------")
+        print(str(key) + " a battu " + str(heuristics[key][1]))
+        print(str(key) + " a gagné " + str(heuristics[key][2]))
+        print(str(key) + " a perdu " + str(heuristics[key][3]))
+        print(str(key) + " a ni gagné ni perdu " + str(heuristics[key][4]))
+        print("")
+
+heuristics = {
+    'Colors' : [ColorsCounting.heuristic, [], 0, 0, 0],
+    'Columns' : [ColumnsLinesCounting.heuristic, [], 0, 0, 0],
+    'Corners' : [CornersCounting.heuristic, [], 0, 0, 0],
+    'Monte' : [MonteCarlo.heuristic, [], 0, 0, 0],
+    'Move' : [MoveCounting.heuristic, [], 0, 0, 0],
+    'Carlito1' : [MonteCarlito1.heuristic, [], 0, 0, 0],
+    'Carlito2' : [MonteCarlito2.heuristic, [], 0, 0, 0],
+    'Carlito3' : [MonteCarlito3.heuristic, [], 0, 0, 0],
+    'Carlito4' : [MonteCarlito4.heuristic, [], 0, 0, 0],
+    'Carlito5' : [MonteCarlito5.heuristic, [], 0, 0, 0],
+    'Random' : [Random.heuristic, [], 0, 0, 0]
 }
 
 UI.initUI(withUI)
@@ -115,19 +165,4 @@ UI.initUI(withUI)
 # board = createBoard(10)
 # player = myPlayer.myPlayer(CornersCounting.heuristic, 0)
 # print(player.heuristicMethod(board, []))
-
-for i in range(1000):
-    board = UI.createBoard(10)
-
-    player1 = myPlayer.myPlayer(CornersCounting.heuristic, 5)  # myPlayerAlix.myPlayer()
-    player2 = myPlayer.myPlayer(MonteCarlo.heuristic, 5)
-
-    players = UI.assignColors(board, player1, player2)
-
-    t = UI.play(board, players, withUI)
-
-    res = UI.printWinner(board, t)
-
-    UI.addPoints(count, res)
-
-print(count)
+allPlayers(heuristics)

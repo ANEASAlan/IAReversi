@@ -1,0 +1,65 @@
+------------------
+Carlito3 a battu ['Deuce Carlito3', 'Deuce Carlito3', 'Deuce Carlito4', 'Move', 'Columns', 'Corners', 'Monte', 'Deuce Carlito5', 'Deuce Colors', 'Carlito2', 'Random', 'Carlito1', 'Deuce Move', 'Columns', 'Corners', 'Monte', 'Colors', 'Carlito2', 'Random', 'Carlito1']
+Carlito3 a gagné 14
+Carlito3 a perdu 2
+Carlito3 a ni gagné ni perdu 6
+
+------------------
+Carlito4 a battu ['Deuce Carlito3', 'Carlito3', 'Carlito4', 'Deuce Move', 'Columns', 'Corners', 'Monte', 'Colors', 'Carlito2', 'Random', 'Move', 'Columns', 'Corners', 'Colors', 'Carlito2', 'Carlito1']
+Carlito4 a gagné 14
+Carlito4 a perdu 6
+Carlito4 a ni gagné ni perdu 2
+
+------------------
+Move a battu ['Deuce Carlito4', 'Deuce Carlito3', 'Move', 'Carlito2', 'Carlito1', 'Monte', 'Deuce Carlito5', 'Colors', 'Random']
+Move a gagné 6
+Move a perdu 13
+Move a ni gagné ni perdu 3
+
+------------------
+Columns a battu ['Move', 'Move', 'Columns', 'Deuce Monte', 'Carlito5', 'Deuce Carlito2', 'Corners', 'Colors', 'Carlito1']
+Columns a gagné 7
+Columns a perdu 13
+Columns a ni gagné ni perdu 2
+
+------------------
+Corners a battu ['Move', 'Columns', 'Move', 'Corners', 'Deuce Monte', 'Carlito5', 'Deuce Carlito2', 'Colors', 'Random', 'Carlito1']
+Corners a gagné 8
+Corners a perdu 12
+Corners a ni gagné ni perdu 2
+
+------------------
+Monte a battu ['Move', 'Deuce Columns', 'Deuce Corners', 'Carlito4', 'Columns', 'Corners', 'Monte', 'Carlito5', 'Deuce Colors', 'Carlito2', 'Colors', 'Random', 'Carlito1']
+Monte a gagné 10
+Monte a perdu 9
+Monte a ni gagné ni perdu 3
+
+------------------
+Carlito5 a battu ['Deuce Carlito3', 'Carlito4', 'Move', 'Carlito3', 'Carlito4', 'Deuce Move', 'Columns', 'Corners', 'Monte', 'Carlito5', 'Colors', 'Carlito2', 'Random', 'Carlito1', 'Colors', 'Random', 'Carlito1']
+Carlito5 a gagné 15
+Carlito5 a perdu 5
+Carlito5 a ni gagné ni perdu 2
+
+------------------
+Colors a battu ['Deuce Carlito3', 'Move', 'Columns', 'Corners', 'Deuce Monte', 'Colors', 'Carlito2', 'Random', 'Carlito1']
+Colors a gagné 7
+Colors a perdu 13
+Colors a ni gagné ni perdu 2
+
+------------------
+Carlito2 a battu ['Deuce Columns', 'Deuce Corners', 'Colors', 'Move', 'Columns', 'Corners', 'Monte', 'Carlito5', 'Carlito2', 'Random', 'Carlito1', 'Random']
+Carlito2 a gagné 10
+Carlito2 a perdu 10
+Carlito2 a ni gagné ni perdu 2
+
+------------------
+Random a battu ['Move', 'Columns', 'Corners', 'Monte', 'Colors', 'Carlito4', 'Columns', 'Random', 'Carlito1']
+Random a gagné 9
+Random a perdu 13
+Random a ni gagné ni perdu 0
+
+------------------
+Carlito1 a battu ['Carlito4', 'Columns', 'Corners', 'Monte', 'Colors', 'Move', 'Carlito2', 'Random', 'Carlito1']
+Carlito1 a gagné 9
+Carlito1 a perdu 13
+Carlito1 a ni gagné ni perdu 0

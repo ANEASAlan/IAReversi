@@ -8,18 +8,18 @@ import Reversi
 # COIN VIDE = 0
 
 def countingLineCol(board, x, y, tmp, streak):
-    if isWhite(board, x, y) and tmp >= 0:
+    if board.isWhite(x, y) and tmp >= 0:
         tmp += 1
 
-    elif isWhite(board, x, y) and tmp < 0:
+    elif board.isWhite(x, y) and tmp < 0:
         tmp = 1
         if abs(tmp) > abs(streak):
             streak = tmp
 
-    if isBlack(board, x, y) and tmp <= 0:
+    if board.isBlack(x, y) and tmp <= 0:
         tmp -= 1
 
-    elif isBlack(board, x, y) and tmp > 0:
+    elif board.isBlack(x, y) and tmp > 0:
         tmp = -1
         if abs(tmp) > abs(streak):
             streak = tmp
@@ -27,18 +27,15 @@ def countingLineCol(board, x, y, tmp, streak):
     return (tmp, streak)
 
 
-    
 
-def countingColumnsAndLines(board):
+
+def heuristic(board, move):
     # To parse the board you want to do a double for loop
     # Best case would be to do it all in a unique loop but that's
     # difficult
 
     # The board is a square
     size = board.get_board_size()
-
-    # The board to use, to avoid multiple dots
-    board = board._board
 
     count = 0
 

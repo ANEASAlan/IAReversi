@@ -25,22 +25,22 @@ def update(b):
 def initUI(withUI):
 
     global screen, cW, cB, cE
+    if withUI:
+        ## Initialize pygame
+        pygame.init()
 
-    ## Initialize pygame
-    pygame.init()
+        ## Set screen
+        screen = pygame.display.set_mode((320,320))
 
-    ## Set screen
-    screen = pygame.display.set_mode((320,320))
+        ## Set Refresh
+        clock = pygame.time.Clock()
+        FPS = 60
+        clock.tick(FPS)
 
-    ## Set Refresh
-    clock = pygame.time.Clock()
-    FPS = 60
-    clock.tick(FPS)
-
-    ## Load image
-    cW = pygame.image.load("Images/White.png")
-    cB = pygame.image.load("Images/Black.png")
-    cE = pygame.image.load("Images/Empty.png")
+        ## Load image
+        cW = pygame.image.load("Images/White.png")
+        cB = pygame.image.load("Images/Black.png")
+        cE = pygame.image.load("Images/Empty.png")
 
 
 def createBoard(size):
