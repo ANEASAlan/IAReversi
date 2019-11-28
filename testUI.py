@@ -10,9 +10,12 @@ import myPlayerAlix
 import myPlayerTitouan
 
 sys.path.insert(1, 'Heuristics/Easy')
+sys.path.insert(1, 'Heuristics/Medium')
 
 # Nos heuristiques
 import CornersCounting
+import ColorsCounting
+import MonteCarlo
 
 # REAME :
 #-pour lancer les tests : python3 testUI.py
@@ -482,7 +485,7 @@ for i in range(1000):
     board = createBoard(10)
 
     player1 = myPlayer.myPlayer(CornersCounting.heuristic, 5)  # myPlayerAlix.myPlayer()
-    player2 = randomPlayer.randomPlayer()
+    player2 = myPlayer.myPlayer(MonteCarlo.heuristic, 5)
 
     players = assignColors(player1, player2)
 
