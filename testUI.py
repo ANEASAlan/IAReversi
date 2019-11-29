@@ -5,29 +5,27 @@ import pygame
 import sys
 import random
 
-withUI = False
-
-argv = sys.argv
-if len(argv) > 1 and argv[1] == "UI" :
-    withUI = True
-
 sys.path.insert(1, 'Heuristics/Easy')
 sys.path.insert(1, 'Heuristics/Medium')
 sys.path.insert(1, 'Heuristics/Hard')
-
 sys.path.insert(1, 'Player')
-
 sys.path.insert(1, 'UI')
 
 import UI
 
-# Les joueurs
+################################################################################
+############################# JOUEURS ##########################################
+################################################################################
+
 import myPlayer
 import randomPlayer
 import myPlayerAlix
 import myPlayerTitouan
 
-# Nos heuristiques
+################################################################################
+############################# HEURISTIQUES #####################################
+################################################################################
+
 # Easy
 import CornersCounting
 import ColorsCounting
@@ -48,6 +46,70 @@ import MonteCarlo
 # REAME :
 #-pour lancer les tests : python3 testUI.py
 #-pour activer l'interface graphique : python3 testUI.py UI
+
+# Cette classe permet de stocker un joueur dans un "tournoi"
+class PlayerTournament:
+
+    # Initialisation de l'objet (seule fonction, cette classe est en réalité
+    # plus proche d'une structure qu'autre chose mais ça n'existe pas en Python)
+    def __init__(self, name, heuristic):
+
+        # Le nom du joueur
+        self.name = name
+
+        # L'heuristique que le joueur utilise
+
+        # Cette dernière doit avoir pour définition :
+        # heuristic(board, move)
+
+        # Les paramètres sont importants car lorsqu'elle est appelée par le
+        # joueur, le plateau et le dernier move effectué lui sont passés en
+        # paramètres, ne pas avoir cette définition causera donc une erreur lors
+        # de l'exécution du code
+
+        # Elle doit renvoyer une valeur dépendant de la couleur
+        # Si la valeur témoigne d'un bon coup pour les blancs, la valeur doit
+        # être positive, sinon elle doit être négative. Elle est nulle si le
+        # coup n'avantage personne
+        self.heuristic = heuristic
+
+        # Cette variable permet de compte combien d'autre joueur ce joueur a
+        # battu lors du "tournoi"
+        self.wins = 0
+
+        # Cette variable permet de compte combien de défaites à subi ce joueur
+        # lors du "tournoi"
+        self.loses = 0
+
+        # Cette variable permet de compter combien de fois lors du "tournoi"
+        # ce joueur a fait match nul
+        self.deuces = 0
+
+        # La liste des joueurs que le joueur a battu
+        self.won = []
+
+        # La liste des joueurs qui ont battu le ce joueur
+        self.lost = []
+
+        # La liste des joueurs contre qui ce joueur a fait match nul
+        self.deuced = []
+
+    # Cette fonction affiche toutes les données corcernant le joueur actuel
+    def printPlayer(self):
+        print("Le joueur " + str(self.name) + " : ")
+
+        print("A gagné " + str(self.wins) + " contre:")
+        self.printAllPlayers(self.won)
+
+        print("A perdu " + str(self.loses) + " contre:")
+        self.printAllPlayers(self.lost)
+
+        print("A fait match nul " + str(self.deuces) + " contre:")
+        self.printAllPlayers(self.deuced)
+
+    def printAllPlayers(self, array):
+        for player in array:
+            print(player.name)
 
 def nbLegalMoves(board, move):
     pass
@@ -110,59 +172,114 @@ def nbLegalMoves(board, move):
     #
     # return moveCountWeight + pointsWeight + cornerWeight + colorsWeight
 
-def allPlayers(heuristics):
-    for black in heuristics:
-        for white in heuristics:
+# Cette fonctio nlance un match entre tous les joueurs disponibles
+# Heuristique est une liste de tous les joueurs possibles
+def startTournament(players):
+
+    # On va traverser les joueurs pour qu'ils s'affrontent, d'abord noir v blanc
+    # puis blanc v noir
+    for black in players:
+        for white in players:
+
+            # On crée le plateau de jeu avec une taille de 10
             board = UI.createBoard(10)
 
-            player1 = myPlayer.myPlayer(heuristics[black][0], 5)
-            player2 = myPlayer.myPlayer(heuristics[white][0], 5)
+            # On crée nos deux joueurs avec les bonnes heuristiques
+            # On leur laisse 5 secondes pour décider chaque coup
 
-            players = UI.assignColors(board, player1, player2)
+            player1 = myPlayer.myPlayer(black.heuristic, 5)
+            player2 = myPlayer.myPlayer(white.heuristic, 5)
 
-            t = UI.play(board, players, withUI)
+            # On donne au plyer1 les noirs et au player2 les blancs
+            competitors = UI.assignColors(board, player1, player2)
 
+            # On démarre le match
+            t = UI.play(board, competitors, withUI)
+
+            # On récupère le résultat
             res = UI.printWinner(board, t)
 
+            # Si les blancs ont gagné
             if res == 0:
-                heuristics[white][1].append(black)
-                heuristics[white][2] += 1
-                heuristics[black][3] += 1
+                modifyPlayers(white, black)
+
+            # Si les noirs ont gagné
             elif res == 1:
-                heuristics[black][1].append(white)
-                heuristics[black][2] += 1
-                heuristics[white][3] += 1
+                modifyPlayers(black, white)
+
+            # Si il y a eu égalité
             else:
-                heuristics[white][1].append("Deuce " + str(black))
-                heuristics[black][1].append("Deuce " + str(white))
-                heuristics[black][4] += 1
-                heuristics[white][4] += 1
+                white.deuces += 1
+                black.deuces += 1
+                white.deuced.append(white)
+                black.deuced.append(black)
 
-    for key in heuristics:
-        print("------------------")
-        print(str(key) + " a battu " + str(heuristics[key][1]))
-        print(str(key) + " a gagné " + str(heuristics[key][2]))
-        print(str(key) + " a perdu " + str(heuristics[key][3]))
-        print(str(key) + " a ni gagné ni perdu " + str(heuristics[key][4]))
-        print("")
+# cette fonction permet d'ajouter un joueur à la liste des joueurs pour le
+# "tournoi"
+def addPlayer(players, name, heuristic):
+    players.append(PlayerTournament(name, heuristic))
 
-heuristics = {
-    'Colors' : [ColorsCounting.heuristic, [], 0, 0, 0],
-    'Columns' : [ColumnsLinesCounting.heuristic, [], 0, 0, 0],
-    'Corners' : [CornersCounting.heuristic, [], 0, 0, 0],
-    'Monte' : [MonteCarlo.heuristic, [], 0, 0, 0],
-    'Move' : [MoveCounting.heuristic, [], 0, 0, 0],
-    'Carlito1' : [MonteCarlito1.heuristic, [], 0, 0, 0],
-    'Carlito2' : [MonteCarlito2.heuristic, [], 0, 0, 0],
-    'Carlito3' : [MonteCarlito3.heuristic, [], 0, 0, 0],
-    'Carlito4' : [MonteCarlito4.heuristic, [], 0, 0, 0],
-    'Carlito5' : [MonteCarlito5.heuristic, [], 0, 0, 0],
-    'Random' : [Random.heuristic, [], 0, 0, 0]
-}
+# Cette fonction ajoute tous les joueurs qui participeront au "tournoi"
+def addAllPlayers(players):
+    addPlayer(players, "Colors", ColorsCounting.heuristic)
+    addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
+    addPlayer(players, "Corners", CornersCounting.heuristic)
+    addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
+    addPlayer(players, "Move", MoveCounting.heuristic)
+    addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
+    addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
+    addPlayer(players, "Carlito (3)", MonteCarlito3.heuristic)
+    addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
+    addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
+    addPlayer(players, "Random", Random.heuristic)
 
+# Cette fonction modifie les joueurs en fonction de qui a gagné et qui a perdu
+# Le premier joueur est le gagnant et le second le perdant
+def modifyPlayers(winner, loser):
+    winner.wins += 1
+    loser.loses += 1
+    winner.won.append(loser)
+    loser.lost.append(winner)
+
+# Cette fonction affiche les statistiques du tournoi
+def results(players):
+    for player in players:
+        player.printPlayer()
+
+################################################################################
+############################# VARIABLES ########################################
+################################################################################
+
+# Si à True alors une interface graphique apparaît
+withUI = False
+
+# On récupère les arguments donnés par l'utilisateurs
+argv = sys.argv
+
+# Si il y a au moins un argument, on vérifie que le premier soit UI, si c'est le
+# cas, alors on passe UI à True (lancement d'une interface graphique plus tard)
+if len(argv) > 1 and argv[1] == "UI" :
+    withUI = True
+
+# La liste des joueurs
+players = []
+
+################################################################################
+############################# MAIN #############################################
+################################################################################
+
+# On lance l'interface utilisateur si withUi est à True
 UI.initUI(withUI)
 
 # board = createBoard(10)
 # player = myPlayer.myPlayer(CornersCounting.heuristic, 0)
 # print(player.heuristicMethod(board, []))
-allPlayers(heuristics)
+
+# On ajoute tous les joueurs qui vont participer
+addAllPlayers(players)
+
+# On lance un match entre tous les joueurs disponibles (2 matchs par joueur)
+startTournament(players)
+
+# On affiche les résultats
+results(players)
