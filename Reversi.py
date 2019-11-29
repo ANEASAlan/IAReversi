@@ -293,6 +293,13 @@ class Board:
             return False
         return True
 
+    def sameColor(self, color1, color2):
+        if color1 != self._EMPTY and color2 != self._EMPTY:
+            if color1 == color2:
+                return 1
+            return -1
+        return 0
+
     def _piece2str(self, c):
         if c==self._WHITE:
             return 'O'

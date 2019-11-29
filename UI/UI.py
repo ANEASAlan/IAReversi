@@ -107,9 +107,9 @@ def play(board, players, withUI):
         othercolor = board._BLACK if nextplayercolor == board._WHITE else board._WHITE
 
         currentTime = time.time()
-        sys.stdout = stringio
+        # sys.stdout = stringio
         move = players[nextplayer].getPlayerMove()
-        sys.stdout = sysstdout
+        # sys.stdout = sysstdout
         playeroutput = "\r" + stringio.getvalue()
         stringio.truncate(0)
 

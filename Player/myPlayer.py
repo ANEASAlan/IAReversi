@@ -8,11 +8,15 @@ from random import randint
 from playerInterface import *
 from enum import Enum
 
+# Cette classe est utilisé dans l'algorithme alpha beta avec mémoire
+# Cela permet de stocker si on doit modifier alpha, beta ou retourner
+# immédiatemment de la fonction
 class Flag(Enum):
     VALUE = 1
     LOW = 2
     UP = 3
 
+# Cette classe permet de stocker un noeud dans notre mémoire
 class NodeValue():
 
     def __init__(self, value, depth):
@@ -24,66 +28,115 @@ class NodeValue():
 class myPlayer(PlayerInterface):
 
     def __init__(self, heuristicMethod, maxTime): # penser à enelever les arguments (sauf self)
+
+        # Notre plateau de jeu
         self._board = Reversi.Board(10)
+
+        # Notre couleur
         self._mycolor = None
+
+        # - infini
         self.minInt = - 2 ** 64
+
+        # + infini
         self.maxInt = - self.minInt
+
+        # La méthode heuristique que nosu utilisons
         self.heuristicMethod = heuristicMethod
+
+        # Notre mémoire
         self.memory = {}
+
+        # La table de hashage (3 * (size * size))
         self.table = []
+        self.generateBaseHash()
+
+        # Le temps écouler depuis que nous faisons une recherche dans notre
+        # arbre
         self.time = 0
+
+        # Le temps maximal durant lequel nous pouvons faire une recherche
         self.maxTime = maxTime
 
     # Returns your player name, as to be displayed during the game
     def getPlayerName(self):
         return "ANEAS DE CASTRO PINTO"
 
+    # Renvoie la couleur inverse de color
     def reverseColor(self, color):
         if color == self._board._BLACK:
             return self._board._WHITE
         return self._board._BLACK
 
+    # Génère une valeur de base pour la table de hashage
     def generateBaseHash(self):
+
+        # La taille du plateau
         size = self._board.get_board_size()
+
+        # Le plateau
         board = self._board._board
+
+        # La superficie du plateau
         area = size * size
 
+        # Pour chaque case du tableau
         for i in range(area):
+
+            # Une ligne de la table de hashage
             tmp = []
+
+            # Pour chaque type de case possible
             for j in range(3):
+
+                # On ajoute un nombre codé sur 64 bits aléatoire
                 tmp.append(randint(0, self.maxInt - 1))
+
+            # On ajoute la ligne crée
             self.table.append(tmp)
 
+    # On calcule le hash de chaque case
     def computeHash(self):
-        hash = 0
-        size = self._board.get_board_size()
-        board = self._board._board
 
+        # Hash de base
+        hash = 0
+
+        # Taille du plateau
+        size = self._board.get_board_size()
+
+        # Le plateau
+        boardArray = self._board._board
+
+        # On parcourt le tableau
         for x in range(size):
             for y in range(size):
-                if board[x][y] != 0:
-                    piece = board[x][y]
+
+                # Si la cellule n'est pas vide
+                if boardArray[x][y] != self._board._EMPTY:
+
+                    # On récupère la pièce
+                    piece = boardArray[x][y]
+
+                    # On modifie le hash dans la case correspondante
                     hash = hash ^ self.table[x * size + y][piece]
+
+        # On retourne le hash final correspondant au plateau actuel
         return hash
 
-    # Neg alpha beta
-
-    def negAlphaBeta(self, depth, alpha, beta, color=None):
-
-        if color == None:
-            color = self._mycolor
+    # Version sans mémoire de neg alpha beta
+    # PAS A JOUR NE PAS UTILISER POUR L'INSTANT !!!!
+    def negAlphaBeta(self, depth, alpha, beta, color):
 
         # Si le jeu est terminé, on renvoie la valeur de l'heuristique
         # On va aussi utiliser une profondeur d'arrêt
         if depth == 0 or self._board.is_game_over():
-            # # print("Reached the end!")
-            if color == self._mycolor:
-                return (None, self.heuristicMethod(self._board))
-            else:
-                return (None, - self.heuristicMethod(self._board))
+            return (None, self.heuristicMethod(self._board))
 
-        # Le coup a retourné, celui à jouer
+        # Le coup a retourné, celui à jouer, None par défaut mais normalement
+        # il est toujours possible d'au moins changer cette valeur
         moveToPlay = None
+
+        # La valeur heuristique maximale trouvée
         maxVal = self.minInt
 
         # On parcourt la liste des coups valides
@@ -99,6 +152,7 @@ class myPlayer(PlayerInterface):
             # On retire le coup que nous venos de jouer
             self._board.pop()
 
+            # On inverse la valeur récupérée puisque c'était le maximum ennemi
             maxVal = max(-val, maxVal)
 
             # Si la valeur récupéré est meilleure que notre pire coup
@@ -112,42 +166,43 @@ class myPlayer(PlayerInterface):
 
         return (moveToPlay, alpha)
 
-    # Neg alpha beta with memory!
+    # Neg alpha beta avec mémoire
+    def negAlphaBetaWithMemory(self, depth, alpha, beta, color, hash, playedMove):
 
-    def negAlphaBetaWithMemory(self, depth, alpha, beta, color=None, hash=None, playedMove=None):
+        # On récupère le temps écoulé depuis le début de l'algorithme
         elapsedTime = time.time() - self.time
 
+        # Si on a passé plus que le temps maximal possible à chercher un coup
+        # On s'arrête ici
         if self.startingDepth != depth and elapsedTime >= self.maxTime:
-            print(elapsedTime)
-            if color == self._mycolor:
-                return (None, self.heuristicMethod(self._board, playedMove))
-            else:
-                return (None, - self.heuristicMethod(self._board, playedMove))
+            return (None, self.heuristicMethod(self._board, playedMove, color))
 
+        # La valeur d'alpha au moment de commencer la recherche à partir de cette racine
         alphaOrig = alpha
 
-        if self.table == []:
-            self.generateBaseHash()
-
-        if hash == None:
-            hash = self.computeHash()
-
-        if color == None:
-            color = self._mycolor
-
+        # Si cette table existe déjà dans la liste des tables
         if hash in self.memory:
+
+            # On récupère les données du noeud déjà calculées
             nodeVal = self.memory[hash]
+
+            # Si le noeud était plus profond que la profondeur actuelle
             if nodeVal.depth >= depth:
 
+                # Si nous ne sommes pas sur le premeir noeud nosu retournons
+                # immédiatemment la valeur
                 if self.startingDepth != depth and nodeVal.flag == Flag.VALUE:
                     return (None, nodeVal.value)
 
+                # Si la valeur était la valeur d'alpha
                 elif nodeVal.flag == Flag.LOW:
                     alpha = max(alpha, nodeVal.value)
 
+                # Sinon c'est la valeur de beta
                 else:
                     beta = min(beta, nodeVal.value)
 
+                # Si alpha >= beta, on coupe quand dans l'algo sans mémoire
                 if self.startingDepth != depth and alpha >= beta:
                     return (None, nodeVal.value)
 
@@ -156,13 +211,12 @@ class myPlayer(PlayerInterface):
         # On va aussi utiliser une profondeur d'arrêt
         if depth == 0 or self._board.is_game_over():
             # # print("Reached the end!")
-            if color == self._mycolor:
-                return (None, self.heuristicMethod(self._board, playedMove))
-            else:
-                return (None, - self.heuristicMethod(self._board, playedMove))
+            return (None, self.heuristicMethod(self._board, playedMove, color))
 
         # Le coup a retourné, celui à jouer
         moveToPlay = None
+
+        # La valeur heuristique maximale trouvée
         maxVal = self.minInt
 
         # On parcourt la liste des coups valides
@@ -170,16 +224,18 @@ class myPlayer(PlayerInterface):
 
             # On joue le premier coup valide
             self._board.push(move)
+
+            # On calcule le hash de la nouvelle table grâce à un XOR astucieux
             tmpHash = hash ^ (self.table[move[1] * self._board.get_board_size() + move[2]][move[0]])
-            playedMove = move
 
             # Recursivité pour parcourir l'arbre
             # On diminue la profondeur de un afin d'être sûr de s'arrêter
-            (_, val) = self.negAlphaBetaWithMemory(depth - 1, -beta, -alpha, self.reverseColor(color), tmpHash, playedMove)
+            (_, val) = self.negAlphaBetaWithMemory(depth - 1, -beta, -alpha, self.reverseColor(color), tmpHash, move)
 
             # On retire le coup que nous venos de jouer
             self._board.pop()
 
+            # On inverse la valeur récupérée puisque c'était le maximum ennemi
             maxVal = max(-val, maxVal)
 
             # Si la valeur récupéré est meilleure que notre pire coup
@@ -191,11 +247,15 @@ class myPlayer(PlayerInterface):
                 if alpha >= beta:
                     break
 
+            # Si on a cherché pendant plus que la maximum accordé, on quitte
             elapsedTime = time.time() - self.time
             if elapsedTime >= self.maxTime:
                 break
 
+        # On crée les données du noeud actuel
         nodeVal = NodeValue(maxVal, depth)
+
+        # On prépare le flag dans le cas où on retomberait sur ce plateau
         if maxVal <= alphaOrig:
             nodeVal.flag = Flag.UP
         elif maxVal >= beta:
@@ -203,6 +263,7 @@ class myPlayer(PlayerInterface):
         else:
             nodeVal.flag = Flag.VALUE
 
+        # On lie le hash de la table à ce noeud
         self.memory[hash] = nodeVal
         return (moveToPlay, maxVal)
 
@@ -234,21 +295,35 @@ class myPlayer(PlayerInterface):
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
         # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
-        moveToPlay = None
-        self.time = time.time()
+        # moveToPlay = None
         # if randint(0, 100) == 0:
         #     self.memory = {}
 
-        for i in range(1, 3):
+        # On stocke le temps auquel la recherche a commencé
+        self.time = time.time()
+
+        # Iterative Deepening, on cherche pour 1, 2, 3 ..., n-1
+        for i in range(1, 5):
+
+            # La profondeur de base (ce n'est pas 0, on stocke la profondeur à
+            # laquelle on veut aller)
             self.startingDepth = i
-            (move, heur1) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt)
+
+            # La recherche !
+            (move, heur1) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt, self._mycolor, self.computeHash(), None)
+
             # print(move)
             # print(heur1)
-            if move != None:
-                moveToPlay = move
+
+            # Si il n y a pas de coup retourné par l'algorithme
+            if move == None:
+                move = self._board.legal_moves()[0]
+
+            # Si le temps maximum de recherche est dépassé, on s'arrête
             elapsedTime = time.time() - self.time
             if elapsedTime >= self.maxTime:
                 break
+
         # print("Move played :")
         # print(moveToPlay)
         # print("------------")
@@ -257,11 +332,11 @@ class myPlayer(PlayerInterface):
         # print("Result = " + str(move) + " / " + str(heur1))
         # print("Expected = " + str(move2) + " / " + str(heur2))
 
-        self._board.push(moveToPlay) #joue le coup choisi dans move
+        self._board.push(move) #joue le coup choisi dans move
 
         # print("I am playing ", move)
 
-        (c,x,y) = moveToPlay #la case sur laquelle jouer le coup move, (couleur, abscisse, ordonnée)
+        (c,x,y) = move #la case sur laquelle jouer le coup move, (couleur, abscisse, ordonnée)
 
         assert(c==self._mycolor) #si pas la bonne couleur, problème
 

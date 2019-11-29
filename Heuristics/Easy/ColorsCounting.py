@@ -6,15 +6,5 @@ import Reversi
 # PION NOIR = -1
 # PION BLANC = 1
 # CASE VIDE = 0
-def heuristic(board, move):
-    # On récupère la taille du plateau
-    size = board.get_board_size()
-
-    # On récupère le tableau représentant les coins
-    corners = board.corners
-
-    # Sotcke la valeur heuristique finale à renvoyer
-    colorsCount = 0
-
-    # On parcourt l'entiereté du plateau
-    return board._nbWHITE - board._nbBLACK
+def heuristic(board, move, color):
+    return (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, color)

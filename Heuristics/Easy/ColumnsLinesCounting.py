@@ -7,19 +7,19 @@ import Reversi
 # COIN BLANC = 1
 # COIN VIDE = 0
 
-def countingLineCol(board, x, y, tmp, streak):
-    if board.isWhite(x, y) and tmp >= 0:
+def countingLineCol(board, x, y, tmp, streak, color):
+    if board.sameColor(board.getCell(x, y), color) == 1 and tmp >= 0:
         tmp += 1
 
-    elif board.isWhite(x, y) and tmp < 0:
+    elif board.sameColor(board.getCell(x, y), color) == 1 and tmp < 0:
         tmp = 1
         if abs(tmp) > abs(streak):
             streak = tmp
 
-    if board.isBlack(x, y) and tmp <= 0:
+    if board.sameColor(board.getCell(x, y), color) == -1 and tmp <= 0:
         tmp -= 1
 
-    elif board.isBlack(x, y) and tmp > 0:
+    elif board.sameColor(board.getCell(x, y), color) == -1 and tmp > 0:
         tmp = -1
         if abs(tmp) > abs(streak):
             streak = tmp
@@ -29,7 +29,7 @@ def countingLineCol(board, x, y, tmp, streak):
 
 
 
-def heuristic(board, move):
+def heuristic(board, move, color):
     # To parse the board you want to do a double for loop
     # Best case would be to do it all in a unique loop but that's
     # difficult
@@ -43,7 +43,7 @@ def heuristic(board, move):
         streak = [0, 0]
         tmp = [0, 0]
         for y in range(size):
-            (tmp[0], streak[0]) = countingLineCol(board, x, y, tmp[0], streak[0])
-            (tmp[1], streak[1]) = countingLineCol(board, y, x, tmp[1], streak[1])
+            (tmp[0], streak[0]) = countingLineCol(board, x, y, tmp[0], streak[0], color)
+            (tmp[1], streak[1]) = countingLineCol(board, y, x, tmp[1], streak[1], color)
 
     return streak[0] + streak[1]

@@ -3,7 +3,7 @@ import Reversi
 # Cette fonction calcule si les pions sont plutot influent ou non
 # Si les blancs sont très influents alors le résultat est plus grand
 # Si les noirs sont très influents alorsl e résultats est plus petit
-def heuristic(board, move):
+def heuristic(board, move, color):
     # On récupère la taille du plateau
     size = board.get_board_size()
 
@@ -13,5 +13,5 @@ def heuristic(board, move):
     # On parcourt le plateau
     for x in range(size):
         for y in range(size):
-            points += board.powerPoints[x][y] * (2 * board.getCell(x, y) - 3)
+            points += board.powerPoints[x][y] * board.sameColor(board.getCell(x, y), color)
     return points

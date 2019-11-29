@@ -6,7 +6,7 @@ import Reversi
 # COIN NOIR = -1
 # COIN BLANC = 1
 # COIN VIDE = 0
-def heuristic(board, move):
+def heuristic(board, move, color):
     # On récupère la taille du plateau
     size = board.get_board_size()
 
@@ -17,14 +17,15 @@ def heuristic(board, move):
     cornerCount = 0
 
     # Calcul coin supérieur gauche
-    cornerCount += corners[0][0] * (board.getCell(0, 0) * 2 - 3)
+    cornerCount += corners[0][0] * board.sameColor(board.getCell(0, 0), color)
 
     # Calcul coin supérieur droit
-    cornerCount += corners[0][size - 1] * (board.getCell(0, size - 1) * 2 - 3)
+    cornerCount += corners[0][size - 1] * board.sameColor(board.getCell(0, size - 1), color)
 
     # Calcul coin inférieur gauche
-    cornerCount += corners[size - 1][0] * (board.getCell(size -1, 0) * 2 - 3)
+    cornerCount += corners[size - 1][0] * board.sameColor(board.getCell(size - 1, 0), color)
 
     # Calcul coin inférieur droit
-    cornerCount += corners[size - 1][size - 1] * (board.getCell(size - 1, size - 1) * 2 - 3)
+    cornerCount += corners[size - 1][size - 1] * board.sameColor(board.getCell(size - 1, size - 1), color)
+
     return cornerCount
