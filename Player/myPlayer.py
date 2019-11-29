@@ -239,7 +239,7 @@ class myPlayer(PlayerInterface):
         # if randint(0, 100) == 0:
         #     self.memory = {}
 
-        for i in range(1, 2):
+        for i in range(1, 3):
             self.startingDepth = i
             (move, heur1) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt)
             # print(move)

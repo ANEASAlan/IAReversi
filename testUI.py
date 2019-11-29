@@ -4,6 +4,9 @@ from io import StringIO
 import pygame
 import sys
 import random
+import csv
+from xlwt import Workbook
+import xlwt
 
 sys.path.insert(1, 'Heuristics/Easy')
 sys.path.insert(1, 'Heuristics/Medium')
@@ -94,22 +97,44 @@ class PlayerTournament:
         # La liste des joueurs contre qui ce joueur a fait match nul
         self.deuced = []
 
+        # Le pourcentage de victoire ce joueur
+        self.winRate = 0
+
     # Cette fonction affiche toutes les données corcernant le joueur actuel
     def printPlayer(self):
-        print("Le joueur " + str(self.name) + " : ")
+        print("----------------------------------\n")
+        print("Le joueur " + str(self.name) + " : \n")
 
-        print("A gagné " + str(self.wins) + " contre:")
+        print("A gagné " + str(self.wins) + " fois contre:\n")
         self.printAllPlayers(self.won)
+        print("")
 
-        print("A perdu " + str(self.loses) + " contre:")
+        print("A perdu " + str(self.loses) + " fois contre:\n")
         self.printAllPlayers(self.lost)
+        print("")
 
-        print("A fait match nul " + str(self.deuces) + " contre:")
+        print("A fait " + str(self.deuces) + " match nul(s) contre:\n")
         self.printAllPlayers(self.deuced)
+        print("")
+
+        print("Son win rate est de " + str(self.winRate) + "\n")
+        print("----------------------------------\n")
 
     def printAllPlayers(self, array):
         for player in array:
             print(player.name)
+
+    def computeWinRate(self):
+        self.winRate = self.wins / self.loses
+
+# Cette classe représente un match
+class Match:
+
+    def __init__(self, player1, player2):
+        self.player1 = player1
+        self.player2 = player2
+        self.winner = None
+        self.loser = None
 
 def nbLegalMoves(board, move):
     pass
@@ -174,12 +199,18 @@ def nbLegalMoves(board, move):
 
 # Cette fonctio nlance un match entre tous les joueurs disponibles
 # Heuristique est une liste de tous les joueurs possibles
-def startTournament(players):
+def startTournament(players, matchs):
 
     # On va traverser les joueurs pour qu'ils s'affrontent, d'abord noir v blanc
     # puis blanc v noir
     for black in players:
         for white in players:
+
+            print("Noir : " + str(black.name))
+            print("Blanc : " + str(white.name))
+
+            # On Crée le match courant
+            match = Match(black, white)
 
             # On crée le plateau de jeu avec une taille de 10
             board = UI.createBoard(10)
@@ -202,10 +233,14 @@ def startTournament(players):
             # Si les blancs ont gagné
             if res == 0:
                 modifyPlayers(white, black)
+                match.winner = white
+                match.loser = black
 
             # Si les noirs ont gagné
             elif res == 1:
                 modifyPlayers(black, white)
+                match.winner = black
+                match.loser = white
 
             # Si il y a eu égalité
             else:
@@ -213,6 +248,9 @@ def startTournament(players):
                 black.deuces += 1
                 white.deuced.append(white)
                 black.deuced.append(black)
+
+            # On ajout le match à la liste des matchs
+            matchs.append(match)
 
 # cette fonction permet d'ajouter un joueur à la liste des joueurs pour le
 # "tournoi"
@@ -222,29 +260,98 @@ def addPlayer(players, name, heuristic):
 # Cette fonction ajoute tous les joueurs qui participeront au "tournoi"
 def addAllPlayers(players):
     addPlayer(players, "Colors", ColorsCounting.heuristic)
-    addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
-    addPlayer(players, "Corners", CornersCounting.heuristic)
-    addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
-    addPlayer(players, "Move", MoveCounting.heuristic)
-    addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
-    addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
+    # addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
+    # addPlayer(players, "Corners", CornersCounting.heuristic)
+    # addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
+    # addPlayer(players, "Move", MoveCounting.heuristic)
+    # addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
+    # addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
     addPlayer(players, "Carlito (3)", MonteCarlito3.heuristic)
-    addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
-    addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
-    addPlayer(players, "Random", Random.heuristic)
+    # addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
+    # addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
+    # addPlayer(players, "Random", Random.heuristic)
 
 # Cette fonction modifie les joueurs en fonction de qui a gagné et qui a perdu
 # Le premier joueur est le gagnant et le second le perdant
 def modifyPlayers(winner, loser):
     winner.wins += 1
     loser.loses += 1
-    winner.won.append(loser)
-    loser.lost.append(winner)
+    if not loser in winner.won:
+        winner.won.append(loser)
+    if not winner in loser.lost:
+        loser.lost.append(winner)
 
 # Cette fonction affiche les statistiques du tournoi
 def results(players):
     for player in players:
         player.printPlayer()
+
+# retourne l'index du joueur dans le tableau
+def getPlayerIndex(players, player):
+    i = 0
+    for p in players:
+        if p == player:
+            return i
+        i += 1
+    return -1
+
+# Cette fonction initialise la matrice passée en paramètre en fonction du
+# nombre de joueur
+def initMat(players, matrice):
+    for x in range(len(players)):
+        tmp = []
+        for y in range(len(players)):
+            tmp.append(0)
+        matrice.append(tmp)
+
+# Cette fonction rempli la matrcie en fonction des matchs qui ont été joués
+# Une victoire ajoute un point, une défaite enlève un point
+def fillMat(matchs, matrice):
+    for match in matchs:
+        # Si il n'y a pas eu de gagnants il n'y a rien à faire
+        if match.winner != None:
+            winner = getPlayerIndex(players, match.winner)
+            loser = getPlayerIndex(players, match.loser)
+            matrice[loser][winner] -= 1
+            matrice[winner][loser] += 1
+
+# Cette fonction sauvegarde les données stockés dans la matrice dans un fichier
+# csv
+def saveResults(filename, players, matrice):
+
+    # On ouvre un book pour écrire dedans (c'est comme un fichier)
+    book = Workbook()
+
+    # On ajoute une feuille (il peut y en avoir plusieurs, il faut donc en
+    # spécifier une)
+    sheet = book.add_sheet('Sheet')
+
+    # On écrit la liste des joueurs sur la première ligne (avec une cellule
+    # vide tout à gauche)
+    for x_index in range(len(players)):
+        sheet.write(x_index + 1, 0, players[x_index].name)
+
+    # On remplit les scores
+    for y_index in range(len(players)):
+
+        # On écrit le nom du joueur en premier sur la ligne
+        sheet.write(0, y_index + 1, players[y_index].name)
+
+        # On écrit ses résultats en fonction de ses adversaires
+        for x_index in range(0, len(players)):
+
+            # On choisit la couleur de fond (vert > 0, rouge < 0, bleu = 0)
+            st = xlwt.easyxf('pattern: pattern solid;')
+            if matrice[x_index][y_index] > 0:
+                st.pattern.pattern_fore_colour = 3
+            elif matrice[x_index][y_index] < 0:
+                st.pattern.pattern_fore_colour = 2
+            else:
+                st.pattern.pattern_fore_colour = 4
+            sheet.write(x_index + 1, y_index + 1, str(matrice[x_index][y_index]), st)
+
+    # On sauvegarde le book en fichier
+    book.save(filename)
 
 ################################################################################
 ############################# VARIABLES ########################################
@@ -264,6 +371,20 @@ if len(argv) > 1 and argv[1] == "UI" :
 # La liste des joueurs
 players = []
 
+# La liste des matchs du tournoi
+matchs = []
+
+# Cette matrice contient les victoires/défaites de chaque IA
+# Exemple :
+#           Colors Corners Columns
+# Colors     0        -2      -2
+# Corners    2         0       0
+# Columns    2         0       0
+#
+# Ici Colors a perdu 2 fois contre Corners et Columns, Corners a gagné autant
+# de fois qu'il a perdu contre columns
+matchMatrice = []
+
 ################################################################################
 ############################# MAIN #############################################
 ################################################################################
@@ -279,7 +400,11 @@ UI.initUI(withUI)
 addAllPlayers(players)
 
 # On lance un match entre tous les joueurs disponibles (2 matchs par joueur)
-startTournament(players)
+startTournament(players, matchs)
 
 # On affiche les résultats
-results(players)
+# results(players)
+
+initMat(players, matchMatrice)
+fillMat(matchs, matchMatrice)
+saveResults("Data/Results.xlsx", players, matchMatrice)
