@@ -30,6 +30,7 @@ import myPlayerTitouan
 ################################################################################
 
 # Easy
+import Fusion
 import CornersCounting
 import ColorsCounting
 import MoveCounting
@@ -259,17 +260,18 @@ def addPlayer(players, name, heuristic):
 
 # Cette fonction ajoute tous les joueurs qui participeront au "tournoi"
 def addAllPlayers(players):
+    addPlayer(players, "Move", MoveCounting.heuristic)
+    addPlayer(players, "Fusion", Fusion.heuristic)
     addPlayer(players, "Colors", ColorsCounting.heuristic)
-    # addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
+    addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
     addPlayer(players, "Corners", CornersCounting.heuristic)
     addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
-    addPlayer(players, "Move", MoveCounting.heuristic)
-    # addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
-    # addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
-    # addPlayer(players, "Carlito (3)", MonteCarlito3.heuristic)
-    # addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
-    # addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
-    # addPlayer(players, "Random", Random.heuristic)
+    addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
+    addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
+    addPlayer(players, "Carlito (3)", MonteCarlito3.heuristic)
+    addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
+    addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
+    addPlayer(players, "Random", Random.heuristic)
 
 # Cette fonction modifie les joueurs en fonction de qui a gagné et qui a perdu
 # Le premier joueur est le gagnant et le second le perdant
