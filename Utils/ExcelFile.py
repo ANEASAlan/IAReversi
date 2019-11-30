@@ -33,7 +33,7 @@ def fillMat(players, matchs, matrice):
 
 # Cette fonction sauvegarde les données stockés dans la matrice dans un fichier
 # csv
-def saveResults(filename, players, matrice):
+def saveResults(filename, players, matrice, nbTournament):
 
     # On ouvre un book pour écrire dedans (c'est comme un fichier)
     book = Workbook()
@@ -58,13 +58,14 @@ def saveResults(filename, players, matrice):
 
             # On choisit la couleur de fond (vert > 0, rouge < 0, bleu = 0)
             st = xlwt.easyxf('pattern: pattern solid;')
-            if matrice[x_index][y_index] > 0:
+            result = int(matrice[x_index][y_index] / (2 * nbTournament) * 10000) / 100
+            if result > 0:
                 st.pattern.pattern_fore_colour = 3
-            elif matrice[x_index][y_index] < 0:
+            elif result < 0:
                 st.pattern.pattern_fore_colour = 2
             else:
                 st.pattern.pattern_fore_colour = 4
-            sheet.write(x_index + 1, y_index + 1, str(matrice[x_index][y_index]), st)
+            sheet.write(x_index + 1, y_index + 1, result, st)
 
     # On sauvegarde le book en fichier
     book.save(filename)

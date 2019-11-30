@@ -88,7 +88,7 @@ class PlayerTournament:
         if self.loses == 0:
             self.winRate = 1
         else:
-            self.winRate = self.wins / self.loses
+            self.winRate = self.wins / (self.loses + self.wins + self.deuces)
 
 # Cette classe représente un match
 class Match:
@@ -185,8 +185,8 @@ class Tournament:
         else:
             white.deuces += 1
             black.deuces += 1
-            white.deuced.append(white)
-            black.deuced.append(black)
+            white.deuced.append(black)
+            black.deuced.append(white)
 
     # Cette fonction modifie les stats en fonction du gagnant et du perdant
     def modifyPlayers(self, winner, loser):

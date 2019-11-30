@@ -60,7 +60,7 @@ def addPlayer(players, name, heuristic):
 def addAllPlayers(players):
     addPlayer(players, "Move", MoveCounting.heuristic)
     addPlayer(players, "Fusion", Fusion.heuristic)
-    addPlayer(players, "Colors", ColorsCounting.heuristic)
+    # addPlayer(players, "Colors", ColorsCounting.heuristic)
     # addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
     # addPlayer(players, "Corners", CornersCounting.heuristic)
     # addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
@@ -114,6 +114,9 @@ boardSize = 8
 # Un objet tournoi pour réaliser des tournoi
 tournament = None
 
+# Nombre de tournoi lancés à la suite
+nbTournament = 10
+
 ################################################################################
 ############################# MAIN #############################################
 ################################################################################
@@ -134,12 +137,15 @@ tournament = Tournament.Tournament()
 # On ajoute tous les matchs possibles (tous les joueurs se rencontrent deux fois)
 tournament.createAllMatchs(players)
 
+# On initialise la matrice avec des 0 partout
+ExcelFile.initMat(players, matchMatrice)
+
 # On effectue tous les matchs
-tournament.startTournament(boardSize, withUI)
+for i in range(nbTournament):
+    tournament.startTournament(boardSize, withUI)
+    ExcelFile.fillMat(players, tournament.matchs, matchMatrice)
 
 # On affiche les résultats
-# results(players)
+results(players)
 
-ExcelFile.initMat(players, matchMatrice)
-ExcelFile.fillMat(players, tournament.matchs, matchMatrice)
-ExcelFile.saveResults("Data/Results.xlsx", players, matchMatrice)
+ExcelFile.saveResults("Data/Results.xlsx", players, matchMatrice, nbTournament)
