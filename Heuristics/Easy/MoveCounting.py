@@ -9,4 +9,4 @@ def heuristic(board, move, color):
     board.pop()
     theirMove = len(board.legal_moves())
     board.push(move)
-    return myMove - theirMove
+    return (myMove - theirMove)

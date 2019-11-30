@@ -1,5 +1,4 @@
 import Reversi
-import random
 
 # NOIR = -1
 # BLANC = 1
@@ -53,10 +52,10 @@ def heuristic(board, myMove, mycolor):
     totalNbPieces = board._nbBLACK + board._nbWHITE
     color = (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, mycolor)
 
-    moveCountWeight = move  * (1.5 - totalNbPieces / 100.0) ** 10 * random.uniform(0.5, 1.5)
-    colorsWeight = color * (0.10 + totalNbPieces / 100.0) ** 20 * random.uniform(0.5, 1.5)
-    pointWeight = point * (2.0 - totalNbPieces / 100.0) ** 4 * random.uniform(0.5, 1.5)
-    cornerWeight = corner * (2.2 - totalNbPieces / 100.0) ** 5 * random.uniform(0.5, 1.5)
+    moveCountWeight = move  * (1.5 - totalNbPieces / 100.0) ** 10
+    colorsWeight = color * (0.10 + totalNbPieces / 100.0) ** 20
+    pointWeight = point * (2.0 - totalNbPieces / 100.0) ** 4
+    cornerWeight = corner * (2.2 - totalNbPieces / 100.0) ** 5
 
     # print(color)
     # print("---------------------")

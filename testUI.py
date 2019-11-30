@@ -60,16 +60,16 @@ def addPlayer(players, name, heuristic):
 def addAllPlayers(players):
     addPlayer(players, "Move", MoveCounting.heuristic)
     addPlayer(players, "Fusion", Fusion.heuristic)
-    # addPlayer(players, "Colors", ColorsCounting.heuristic)
-    # addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
-    # addPlayer(players, "Corners", CornersCounting.heuristic)
-    # addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
-    # addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
-    # addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
-    # addPlayer(players, "Carlito (3)", MonteCarlito3.heuristic)
-    # addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
-    # addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
-    # addPlayer(players, "Random", Random.heuristic)
+    addPlayer(players, "Colors", ColorsCounting.heuristic)
+    addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
+    addPlayer(players, "Corners", CornersCounting.heuristic)
+    addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
+    addPlayer(players, "Carlito (1)", MonteCarlito1.heuristic)
+    addPlayer(players, "Carlito (2)", MonteCarlito2.heuristic)
+    addPlayer(players, "Carlito (3)", MonteCarlito3.heuristic)
+    addPlayer(players, "Carlito (4)", MonteCarlito4.heuristic)
+    addPlayer(players, "Carlito (5)", MonteCarlito5.heuristic)
+    addPlayer(players, "Random", Random.heuristic)
 
 # Cette fonction affiche les statistiques du tournoi
 def results(players):
@@ -109,13 +109,13 @@ matchs = []
 matchMatrice = []
 
 # La taille du plateau
-boardSize = 8
+boardSize = 10
 
 # Un objet tournoi pour réaliser des tournoi
 tournament = None
 
 # Nombre de tournoi lancés à la suite
-nbTournament = 10
+nbTournament = 1
 
 ################################################################################
 ############################# MAIN #############################################

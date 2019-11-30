@@ -46,4 +46,4 @@ def heuristic(board, move, color):
             (tmp[0], streak[0]) = countingLineCol(board, x, y, tmp[0], streak[0], color)
             (tmp[1], streak[1]) = countingLineCol(board, y, x, tmp[1], streak[1], color)
 
-    return streak[0] + streak[1]
+    return (streak[0] + streak[1])

@@ -303,7 +303,7 @@ class myPlayer(PlayerInterface):
         self.time = time.time()
 
         # Iterative Deepening, on cherche pour 1, 2, 3 ..., n-1
-        for i in range(1, 3):
+        for i in range(1, 5):
 
             # La profondeur de base (ce n'est pas 0, on stocke la profondeur à
             # laquelle on veut aller)
