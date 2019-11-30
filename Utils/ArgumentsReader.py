@@ -15,6 +15,16 @@ class Argument:
         # La liste des matchs que l'utilisateur demande
         self.matchs = []
 
+        # Est-ce qu'on affiche tous les joueurs possibles
+        self.displayPlayers = False
+
+        # Le temps maximum autorisés à passer dans l'arbre des coups
+        self.maxTime = 5
+
+        # Le fichier dans lequel sauvegarder les résultats du tournoi, si il
+        # y en a un
+        self.filename = "Data/Results.xlsx"
+
     # Cette fonction affiche tous les arguments et leur valeur
     def printArgs(self):
         print("----------------------")
@@ -95,5 +105,69 @@ def getArguments(argv):
                 player2 = argv[index + 2]
                 arguments.matchs.append([player1, player2])
 
+        # Si l'argument est -h
+        if "-h" == argv[index]:
+            printHelp()
+
+        # Si l'argument est -P
+        if "-P" == argv[index]:
+            arguments.displayPlayers = True
+
+        # Si l'argument est -TM
+        if "-TM" == argv[index]:
+
+            # On récupère l'argument suivant, censé être le temps maximal
+            # autorisé pour chercher dans le meilleur coup
+            # On a encore une fois besoin d'un bloc try/catch dans le cas
+            # où l'argument suivant n'est pas un nombre
+            try:
+                time = float(argv[index + 1])
+                if time <= 0:
+                    print("Error: Invalid time. Defaults to 5 seconds")
+                else:
+                    arguments.maxTime = time
+            except Exception as e:
+                print("Error: Invalid time. Defaults to 5 seconds")
+
+        # Si l'argument est -F
+        if "-F" == argv[index]:
+
+            # On récupère le nom du fichier dans lequel sauvegarder les
+            # résultats si il y a eu un tournoi, si il n'y en a pas eu, cette
+            # variable n'est juste jamais utilisée
+            # Si le chemin est invalide, la sauvegarde échouera plus tard
+
+            # On s'assure de plus qu'il existe un argument en plus, sinon une
+            # exception sera levée
+            if index + 1 < len(argv):
+                arguments.filename = argv[index + 1]
+
+
     # On retourne la liste d'arguments
     return arguments
+
+# Cette fonction affiche tous les paramètres disponibles
+def printHelp():
+    print("---------------------------------------------------------------------")
+    print("Welcome to the best AI ever created! Here are your options to toy with it.")
+    print("")
+    print("-UI                  Enables the GUI")
+    print("")
+    print("-BDS [size]          Sets the size of the board")
+    print("")
+    print("-T [nb]              Enables tournaments to happen (nb is optional,  \
+                                sets the number of tournaments that should happen)")
+    print("")
+    print("-M [p1] [p2]         Sets a match that will happen between p1 and p2 \
+                                which arre the names of the players. If p1 or p2\
+                                is an incorrect name, the match will be cancelled")
+    print("")
+    print("-P                   Prints the list of availible players")
+    print("")
+    print("-TM [time]           The maximum amount of time a player can spend   \
+                                looking for the best move to play")
+    print("")
+    print("-F [filename]        Saves the results of the tournament in this file")
+    print("")
+    print("-h                   Prints this very help")
+    print("")

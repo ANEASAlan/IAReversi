@@ -5,6 +5,7 @@ sys.path.insert(1, '../Player')
 
 import UI
 import myPlayer
+import ExcelFile
 
 # Cette classe permet de stocker un joueur dans un "tournoi"
 class PlayerTournament:
@@ -144,7 +145,7 @@ class Tournament:
                 if player1 != player2:
                     self.addMatch(player1, player2)
 
-    def startTournament(self, boardSize, withUI):
+    def startTournament(self, boardSize, withUI, time):
         # On va traverser les joueurs pour qu'ils s'affrontent, d'abord noir v blanc
         # puis blanc v noir
         for match in self.matchs:
@@ -153,7 +154,7 @@ class Tournament:
             board = UI.createBoard(boardSize)
 
             # On récupère le résultat du match pour changer les stats des joueurs
-            res = startMatch(board, match, boardSize, withUI)
+            res = startMatch(board, match, boardSize, withUI, time)
 
             # On change les stats des joueurs
             self.updateStats(match, res)
@@ -205,7 +206,7 @@ class Tournament:
 
 # Cette fonction démarre un match donné en paramètre sur un plateau de taille
 # donnée
-def startMatch(board, match, boardSize, withUI):
+def startMatch(board, match, boardSize, withUI, time):
 
     # On récupère le joueur blanc et le joueur noir afin d'alléger la
     # suite du code
@@ -219,8 +220,8 @@ def startMatch(board, match, boardSize, withUI):
     # On crée nos deux joueurs avec les bonnes heuristiques
     # On leur laisse 5 secondes pour décider chaque coup
 
-    player1 = myPlayer.myPlayer(black.heuristic, 5, boardSize)
-    player2 = myPlayer.myPlayer(white.heuristic, 5, boardSize)
+    player1 = myPlayer.myPlayer(black.heuristic, time, boardSize)
+    player2 = myPlayer.myPlayer(white.heuristic, time, boardSize)
 
     # On donne au plyer1 les noirs et au player2 les blancs
     competitors = UI.assignColors(board, player1, player2)
@@ -232,3 +233,89 @@ def startMatch(board, match, boardSize, withUI):
     res = UI.printWinner(board, res)
 
     return res
+
+# Cette fonction permet de lancer un tournoi
+def playTournament(players, args):
+
+    # On récupère les arguments de l'utilisateur
+    nbTournament = args.nbTournament
+    boardSize = args.boardSize
+    withUI = args.withUI
+    time = args.maxTime
+    filename = args.filename
+
+    # Cette matrice contient les victoires/défaites de chaque IA
+    # Exemple :
+    #           Colors Corners Columns
+    # Colors     0        -2      -2
+    # Corners    2         0       0
+    # Columns    2         0       0
+    #
+    # Ici Colors a perdu 2 fois contre Corners et Columns, Corners a gagné autant
+    # de fois qu'il a perdu contre columns
+    matchMatrice = []
+
+    # On crée un nouveau tounoi
+    tournament = Tournament()
+
+    # On ajoute tous les matchs possibles (tous les joueurs se rencontrent deux fois)
+    tournament.createAllMatchs(players)
+
+    # On initialise la matrice avec des 0 partout
+    ExcelFile.initMat(players, matchMatrice)
+
+    # On effectue tous les matchs
+    for i in range(nbTournament):
+        tournament.startTournament(boardSize, withUI, time)
+        ExcelFile.fillMat(players, tournament.matchs, matchMatrice)
+
+    # On affiche les résultats
+    results(players)
+
+    ExcelFile.saveResults(filename, players, matchMatrice, nbTournament)
+
+def getPlayerFromName(players, name):
+    for player in players:
+        if player.name == name:
+            return player
+    return None
+
+# Cette fonction lance otus les matchs demandés par l'utilisateur
+def playMatchs(players, args):
+
+    # On récupère les arguments de l'utilisateur
+    boardSize = args.boardSize
+    withUI = args.withUI
+    matchs = args.matchs
+    time = args.maxTime
+
+    # On parcourt la liste des matchs
+    for m in matchs:
+
+        # On récupère les joueurs à partir de leurs noms
+        player1 = getPlayerFromName(players, m[0])
+        player2 = getPlayerFromName(players, m[1])
+
+        # On vérifie que les deux joueurs sont corrects
+        if player1 != None and player2 != None:
+
+            # Match allé
+            match = Match(player1, player2)
+            board = UI.createBoard(boardSize)
+            startMatch(board, match, boardSize, withUI, time)
+
+            # Match retour
+            match = Match(player2, player1)
+            board = UI.createBoard(boardSize)
+            startMatch(board, match, boardSize, withUI, time)
+
+        else:
+            if player1 == None:
+                print(m[0] + " is not a valid name for a player")
+            if player2 == None:
+                print(m[1] + " is not a valid name for a player")
+
+# Cette fonction affiche les statistiques du tournoi
+def results(players):
+    for player in players:
+        player.printPlayer()
