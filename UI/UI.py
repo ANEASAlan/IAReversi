@@ -10,31 +10,36 @@ cW = None
 cB = None
 cE = None
 
+cellSize = 32
+
+FPS = 60
+
 ## Update the board
-def update(b):
-    for posX in range(10):
-        for posY in range(10):
+def update(b, size=10):
+    for posX in range(size):
+        for posY in range(size):
             if b._board[posX][posY] == b._BLACK:
-                screen.blit(cB,(posX*32,posY*32))
+                screen.blit(cB,(posX*cellSize,posY*cellSize))
             elif b._board[posX][posY] == b._WHITE:
-                screen.blit(cW,(posX*32,posY*32))
+                screen.blit(cW,(posX*cellSize,posY*cellSize))
             else :
-                screen.blit(cE,(posX*32,posY*32))
+                screen.blit(cE,(posX*cellSize,posY*cellSize))
     pygame.display.flip()
 
-def initUI(withUI):
+def initUI(withUI, boardSize=10):
 
-    global screen, cW, cB, cE
+    global screen, cW, cB, cE, FPS
     if withUI:
         ## Initialize pygame
         pygame.init()
 
         ## Set screen
-        screen = pygame.display.set_mode((320,320))
+        width = cellSize * boardSize
+        height = cellSize * boardSize
+        screen = pygame.display.set_mode((width, height))
 
         ## Set Refresh
         clock = pygame.time.Clock()
-        FPS = 60
         clock.tick(FPS)
 
         ## Load image
@@ -127,7 +132,7 @@ def play(board, players, withUI):
         board.push([nextplayercolor, x, y])
 
         if withUI :
-            update(board)
+            update(board, board.get_board_size())
 
         players[otherplayer].playOpponentMove(x,y)
 

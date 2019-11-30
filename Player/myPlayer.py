@@ -27,10 +27,10 @@ class NodeValue():
 
 class myPlayer(PlayerInterface):
 
-    def __init__(self, heuristicMethod, maxTime): # penser à enelever les arguments (sauf self)
+    def __init__(self, heuristicMethod, maxTime, boardSize): # penser à enelever les arguments (sauf self)
 
         # Notre plateau de jeu
-        self._board = Reversi.Board(10)
+        self._board = Reversi.Board(boardSize)
 
         # Notre couleur
         self._mycolor = None

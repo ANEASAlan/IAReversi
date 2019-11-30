@@ -200,7 +200,7 @@ def nbLegalMoves(board, move):
 
 # Cette fonctio nlance un match entre tous les joueurs disponibles
 # Heuristique est une liste de tous les joueurs possibles
-def startTournament(players, matchs):
+def startTournament(players, matchs, boardSize):
 
     # On va traverser les joueurs pour qu'ils s'affrontent, d'abord noir v blanc
     # puis blanc v noir
@@ -214,13 +214,13 @@ def startTournament(players, matchs):
             match = Match(black, white)
 
             # On crée le plateau de jeu avec une taille de 10
-            board = UI.createBoard(10)
+            board = UI.createBoard(boardSize)
 
             # On crée nos deux joueurs avec les bonnes heuristiques
             # On leur laisse 5 secondes pour décider chaque coup
 
-            player1 = myPlayer.myPlayer(black.heuristic, 5)
-            player2 = myPlayer.myPlayer(white.heuristic, 5)
+            player1 = myPlayer.myPlayer(black.heuristic, 5, boardSize)
+            player2 = myPlayer.myPlayer(white.heuristic, 5, boardSize)
 
             # On donne au plyer1 les noirs et au player2 les blancs
             competitors = UI.assignColors(board, player1, player2)
@@ -387,12 +387,15 @@ matchs = []
 # de fois qu'il a perdu contre columns
 matchMatrice = []
 
+# The size of the board
+boardSize = 20
+
 ################################################################################
 ############################# MAIN #############################################
 ################################################################################
 
 # On lance l'interface utilisateur si withUi est à True
-UI.initUI(withUI)
+UI.initUI(withUI, boardSize)
 
 # board = createBoard(10)
 # player = myPlayer.myPlayer(CornersCounting.heuristic, 0)
@@ -402,7 +405,7 @@ UI.initUI(withUI)
 addAllPlayers(players)
 
 # On lance un match entre tous les joueurs disponibles (2 matchs par joueur)
-startTournament(players, matchs)
+startTournament(players, matchs, boardSize)
 
 # On affiche les résultats
 # results(players)
