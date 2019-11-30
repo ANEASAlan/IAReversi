@@ -47,7 +47,6 @@ def initUI(withUI, boardSize=10):
         cB = pygame.image.load("Images/Black.png")
         cE = pygame.image.load("Images/Empty.png")
 
-
 def createBoard(size):
     return Reversi.Board(size)
 

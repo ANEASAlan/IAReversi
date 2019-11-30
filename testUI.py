@@ -15,6 +15,7 @@ sys.path.insert(1, 'Utils')
 import UI
 import Tournament
 import ExcelFile
+import ArgumentsReader as ArgR
 
 ################################################################################
 ############################# JOUEURS ##########################################
@@ -76,26 +77,79 @@ def results(players):
     for player in players:
         player.printPlayer()
 
+# Cette fonction permet de lancer un tournoi
+def playTournament(players, nbTournament):
+    # On crée un nouveau tounoi
+    tournament = Tournament.Tournament()
+
+    # On ajoute tous les matchs possibles (tous les joueurs se rencontrent deux fois)
+    tournament.createAllMatchs(players)
+
+    # On initialise la matrice avec des 0 partout
+    ExcelFile.initMat(players, matchMatrice)
+
+    # On effectue tous les matchs
+    for i in range(nbTournament):
+        tournament.startTournament(boardSize, withUI)
+        ExcelFile.fillMat(players, tournament.matchs, matchMatrice)
+
+    # On affiche les résultats
+    results(players)
+
+    ExcelFile.saveResults("Data/Results.xlsx", players, matchMatrice, nbTournament)
+
+def getPlayerFromName(players, name):
+    for player in players:
+        if player.name == name:
+            return player
+    return None
+
+# Cette fonction lance otus les matchs demandés par l'utilisateur
+def playMatchs(players, matchs):
+    # On parcourt la liste des matchs
+    for m in matchs:
+
+        # On récupère les joueurs à partir de leurs noms
+        player1 = getPlayerFromName(players, m[0])
+        player2 = getPlayerFromName(players, m[1])
+
+        # On vérifie que les deux joueurs sont corrects
+        if player1 != None and player2 != None:
+
+            # Match allé
+            match = Tournament.Match(player1, player2)
+            board = UI.createBoard(boardSize)
+            Tournament.startMatch(board, match, boardSize, withUI)
+
+            # Match retour
+            match = Tournament.Match(player2, player1)
+            board = UI.createBoard(boardSize)
+            Tournament.startMatch(board, match, boardSize, withUI)
+
+        else:
+            if player1 == None:
+                print(m[0] + " is not a valid name for a player")
+            if player2 == None:
+                print(m[1] + " is not a valid name for a player")
+
 ################################################################################
 ############################# VARIABLES ########################################
 ################################################################################
 
-# Si à True alors une interface graphique apparaît
-withUI = False
-
 # On récupère les arguments donnés par l'utilisateurs
 argv = sys.argv
 
-# Si il y a au moins un argument, on vérifie que le premier soit UI, si c'est le
-# cas, alors on passe UI à True (lancement d'une interface graphique plus tard)
-if len(argv) > 1 and argv[1] == "UI" :
-    withUI = True
+# La liste des arguments
+args = ArgR.getArguments(argv)
+
+# Si à True alors une interface graphique apparaît
+withUI = args.withUI
 
 # La liste des joueurs
 players = []
 
 # La liste des matchs du tournoi
-matchs = []
+matchs = args.matchs
 
 # Cette matrice contient les victoires/défaites de chaque IA
 # Exemple :
@@ -109,43 +163,35 @@ matchs = []
 matchMatrice = []
 
 # La taille du plateau
-boardSize = 10
+boardSize = args.boardSize
 
 # Un objet tournoi pour réaliser des tournoi
 tournament = None
 
 # Nombre de tournoi lancés à la suite
-nbTournament = 1
+nbTournament = args.nbTournament
 
 ################################################################################
 ############################# MAIN #############################################
 ################################################################################
 
+# On affiche la liste des arguments passés
+args.printArgs()
+
 # On lance l'interface utilisateur si withUi est à True
 UI.initUI(withUI, boardSize)
+
+# On ajoute tous les joueurs qui existent
+addAllPlayers(players)
 
 # board = createBoard(10)
 # player = myPlayer.myPlayer(CornersCounting.heuristic, 0)
 # print(player.heuristicMethod(board, []))
 
-# On ajoute tous les joueurs qui vont participer
-addAllPlayers(players)
+# Si l'utilisateur a demandé des tournois
+if nbTournament:
+    playTournament(players, nbTournament)
 
-# On crée un nouveau tounoi
-tournament = Tournament.Tournament()
-
-# On ajoute tous les matchs possibles (tous les joueurs se rencontrent deux fois)
-tournament.createAllMatchs(players)
-
-# On initialise la matrice avec des 0 partout
-ExcelFile.initMat(players, matchMatrice)
-
-# On effectue tous les matchs
-for i in range(nbTournament):
-    tournament.startTournament(boardSize, withUI)
-    ExcelFile.fillMat(players, tournament.matchs, matchMatrice)
-
-# On affiche les résultats
-results(players)
-
-ExcelFile.saveResults("Data/Results.xlsx", players, matchMatrice, nbTournament)
+# Si l'utilisateur a demandé des matchs
+if matchs:
+    playMatchs(players, matchs)

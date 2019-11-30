@@ -155,9 +155,6 @@ class Tournament:
             # On récupère le résultat du match pour changer les stats des joueurs
             res = startMatch(board, match, boardSize, withUI)
 
-            # On récupère le résultat
-            res = UI.printWinner(board, res)
-
             # On change les stats des joueurs
             self.updateStats(match, res)
 
@@ -229,4 +226,9 @@ def startMatch(board, match, boardSize, withUI):
     competitors = UI.assignColors(board, player1, player2)
 
     # On démarre le match
-    return UI.play(board, competitors, withUI)
+    res =  UI.play(board, competitors, withUI)
+
+    # On récupère le résultat
+    res = UI.printWinner(board, res)
+
+    return res
