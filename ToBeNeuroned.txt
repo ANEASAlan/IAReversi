@@ -1,0 +1,8 @@
+Valeurs qu'il faudra déterminer avec le réseaux de neuronne :
+
+-Les 15 valeurs dans le tableau de PowerSpots.
+-Les 4 multiplicateurs pour les fonctions heuristiques (Move, Colors, Point, Corner)
+-Les 4 pourcentages en rapport avec le nombre de pièces en jeu, pour les heuristiques.
+
+-La façon de mofidier le tableau de Power Spots selon l'évolution du board.
+Exemple : si on réussit à prendre le coin, on pourra considérer les case avoisinantes comme ayant un Power Spot positif.

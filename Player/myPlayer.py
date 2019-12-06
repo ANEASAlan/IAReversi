@@ -355,6 +355,8 @@ class myPlayer(PlayerInterface):
 
         # print(self._board)
 
+        PositivePowerSpots(board.powerPoints, x, y)
+
         return (x,y) #renvoyer le coup à jouer
 
     # Inform you that the oponent has played this move. You must play it
