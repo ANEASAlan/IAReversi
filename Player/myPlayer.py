@@ -4,7 +4,7 @@
 
 import time
 import Reversi
-from random import randint
+import random
 from playerInterface import *
 from enum import Enum
 
@@ -27,7 +27,10 @@ class NodeValue():
 
 class myPlayer(PlayerInterface):
 
-    def __init__(self, heuristicMethod, maxTime, boardSize): # penser à enelever les arguments (sauf self)
+    def __init__(self, heuristicMethod, maxTime, boardSize, randomnessTheo = 0, randomnessAlan = 0): # penser à enelever les arguments (sauf self)
+
+        self.randomnessTheo = randomnessTheo
+        self.randomnessAlan = randomnessAlan
 
         # Notre plateau de jeu
         self._board = Reversi.Board(boardSize)
@@ -90,7 +93,7 @@ class myPlayer(PlayerInterface):
             for j in range(3):
 
                 # On ajoute un nombre codé sur 64 bits aléatoire
-                tmp.append(randint(0, self.maxInt - 1))
+                tmp.append(random.randint(0, self.maxInt - 1))
 
             # On ajoute la ligne crée
             self.table.append(tmp)
@@ -168,6 +171,9 @@ class myPlayer(PlayerInterface):
 
     # Neg alpha beta avec mémoire
     def negAlphaBetaWithMemory(self, depth, alpha, beta, color, hash, playedMove):
+
+        if random.random() < self.randomnessTheo :
+            return (None, alpha)
 
         # On récupère le temps écoulé depuis le début de l'algorithme
         elapsedTime = time.time() - self.time
@@ -296,21 +302,25 @@ class myPlayer(PlayerInterface):
 
         # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
         # moveToPlay = None
-        # if randint(0, 100) == 0:
+        # if random.randint(0, 100) == 0:
         #     self.memory = {}
 
         # On stocke le temps auquel la recherche a commencé
         self.time = time.time()
 
         # Iterative Deepening, on cherche pour 1, 2, 3 ..., n-1
-        for i in range(1, 5):
+        for i in range(1, 100):
 
             # La profondeur de base (ce n'est pas 0, on stocke la profondeur à
             # laquelle on veut aller)
             self.startingDepth = i
 
             # La recherche !
-            (move, heur1) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt, self._mycolor, self.computeHash(), None)
+            move = None
+            if random.random() < self.randomnessAlan :
+                move = random.choice(self._board.legal_moves())
+            else :
+                (move, _) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt, self._mycolor, self.computeHash(), None)
             # print(heur1)
 
             # print(move)

@@ -6,8 +6,7 @@ import Reversi
 
 def heuristic(board, myMove, mycolor):
 
-    if mycolor == 0:
-        print("rgufurngrngienrngoengo")
+    #if mycolor == 0:
 
     if board._BLACK != mycolor and board._nbBLACK == 0:
         return 10000
@@ -20,7 +19,7 @@ def heuristic(board, myMove, mycolor):
     # On récupère le tableau représentant les coins
     corners = board.corners
 
-    # La valeur a renvoyé à la fin
+    # La valeur à renvoyer à la fin
     point = 0
     move = 0
     corner = 0

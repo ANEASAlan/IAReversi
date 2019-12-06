@@ -149,23 +149,19 @@ def getArguments(argv):
 # Cette fonction affiche tous les paramètres disponibles
 def printHelp():
     print("---------------------------------------------------------------------")
-    print("Welcome to the best AI ever created! Here are your options to toy with it.")
+    print("Welcome to the best A.I. ever created! Here are your options to toy with it.")
     print("")
     print("-UI                  Enables the GUI")
     print("")
-    print("-BDS [size]          Sets the size of the board")
+    print("-BDS [size]          Sets the size of the board, 10x10 by default")
     print("")
-    print("-T [nb]              Enables tournaments to happen (nb is optional,  \
-                                sets the number of tournaments that should happen)")
+    print("-T [nb]              Allows tournaments to happen (nb is optional, sets the number of tournaments that should happen)")
     print("")
-    print("-M [p1] [p2]         Sets a match that will happen between p1 and p2 \
-                                which arre the names of the players. If p1 or p2\
-                                is an incorrect name, the match will be cancelled")
+    print("-M [p1] [p2]         Sets a match that will happen between p1 and p2, which are the names of the players. If p1 or p2 is an incorrect name, the match will be cancelled")
     print("")
-    print("-P                   Prints the list of availible players")
+    print("-P                   Prints the list of available players")
     print("")
-    print("-TM [time]           The maximum amount of time a player can spend   \
-                                looking for the best move to play")
+    print("-TM [time]           The maximum amount of time a player can spend looking for the best move to play")
     print("")
     print("-F [filename]        Saves the results of the tournament in this file")
     print("")

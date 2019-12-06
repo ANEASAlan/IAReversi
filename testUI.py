@@ -74,7 +74,7 @@ def addAllPlayers(players):
 
 # Cette fonction affiche le nom de tous les joueurs disponibles
 def displayPlayers(players):
-    print("Liste des joueurs:")
+    print("Liste des joueurs :")
     print("")
     for player in players:
         print(player.name)

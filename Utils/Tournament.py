@@ -7,6 +7,11 @@ import UI
 import myPlayer
 import ExcelFile
 
+RANDOMNESSTHEOP1 = 0 # Renvoyer une heurisitique alpha, osef, pour joueur 1
+RANDOMNESSALANP1 = 0 # Renvoyer un move aléatoire, pour joueur 1
+RANDOMNESSTHEOP2 = 0 # Renvoyer une heurisitique alpha, osef, pour joueur 2
+RANDOMNESSALANP2 = 0 # Renvoyer un move aléatoire, pour joueur 2
+
 # Cette classe permet de stocker un joueur dans un "tournoi"
 class PlayerTournament:
 
@@ -220,8 +225,8 @@ def startMatch(board, match, boardSize, withUI, time):
     # On crée nos deux joueurs avec les bonnes heuristiques
     # On leur laisse 5 secondes pour décider chaque coup
 
-    player1 = myPlayer.myPlayer(black.heuristic, time, boardSize)
-    player2 = myPlayer.myPlayer(white.heuristic, time, boardSize)
+    player1 = myPlayer.myPlayer(black.heuristic, time, boardSize, RANDOMNESSTHEOP1, RANDOMNESSALANP1)
+    player2 = myPlayer.myPlayer(white.heuristic, time, boardSize, RANDOMNESSTHEOP2, RANDOMNESSALANP2)
 
     # On donne au plyer1 les noirs et au player2 les blancs
     competitors = UI.assignColors(board, player1, player2)
