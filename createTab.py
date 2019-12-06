@@ -1,3 +1,5 @@
+# -*-coding:Latin-1 -*
+
 def createTab(factor, size = 10): #factor est le gradient logarithmique que l'on donnera aux cases (pour gradient = 3, les cases auront les valeurs 3, 9, 27 ou 81 à un signe près), size est la taille d'un côté de tableau carré (10 sur ce projet)
     finalTab = []   # tableau des Power Spots
 
@@ -6,7 +8,7 @@ def createTab(factor, size = 10): #factor est le gradient logarithmique que l'on
     tabOfTabs = []  # étant donné que des lignes du tableau des Power Spots seront identiques, sans compter le signe des valeurs, je fais en premier lieu un tableau qui contiendra les lignes, pour je les y ajouterai plus tard
 
     # PARTIE 1 : Remplir le tableau qui contiendra les lignes à mettre dans le tableau de Power Spots
-    
+
     while j < size//2 : # le tableau étant très symmétrique, je calcule seulement la partie haute
 
         tab1 = []
@@ -18,7 +20,7 @@ def createTab(factor, size = 10): #factor est le gradient logarithmique que l'on
                 tab1.append(nb) # je le fais deux fois, car j'ai remarqué que si on applique notre façon d'assigner les power spots, on a à chaque fois deux fois la même valeur à la suite
             if i < size//2-1 :  # si on est pas arrivé au-delà du milieu du board
                 nb = nb // factor  # ensuite on change la valeur à attribuer à la case
-            
+
 
         nb = nb * factor
         for i in range(size//2 + 1,size,2) :   # le tableau étant très symmétrique, je fais ensuite la partie haute droite
@@ -74,5 +76,5 @@ def createTab(factor, size = 10): #factor est le gradient logarithmique que l'on
     return finalTab # le tableau est enfin fait, je peux donc le renvoyer
 
 
-    
+
 #finalTab = createTab(3) exemple d'appel de la fonction pour un facteur 3 et un tableau de 10x10
