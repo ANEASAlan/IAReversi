@@ -4,7 +4,7 @@ import Reversi
 # BLANC = 1
 # VIDE = 0
 
-def heuristic(board, move, color):
+def heuristic(board, move, player):
     myMove = len(board.legal_moves())
     board.pop()
     theirMove = len(board.legal_moves())

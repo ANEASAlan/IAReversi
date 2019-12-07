@@ -5,6 +5,7 @@
 import time
 import Reversi
 import random
+import createTab
 import PositivePowerSpots as PPS
 import sys
 sys.path.insert(1,"../Heuristics/Easy")
@@ -64,6 +65,25 @@ class myPlayer(PlayerInterface):
 
         # Le temps maximal durant lequel nous pouvons faire une recherche
         self.maxTime = maxTime
+
+        self.powerPoints = [
+            [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
+            [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+            [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+            [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+            [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+            [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+            [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+            [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+            [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+            [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
+        ]
+
+        self.powerCarlito1 = createTab.createTab(1, self._board._boardsize)
+        self.powerCarlito2 = createTab.createTab(2, self._board._boardsize)
+        self.powerCarlito3 = createTab.createTab(3, self._board._boardsize)
+        self.powerCarlito4 = createTab.createTab(4, self._board._boardsize)
+        self.powerCarlito5 = createTab.createTab(5, self._board._boardsize)
 
     # Returns your player name, as to be displayed during the game
     def getPlayerName(self):
@@ -185,7 +205,7 @@ class myPlayer(PlayerInterface):
         # Si on a passé plus que le temps maximal possible à chercher un coup
         # On s'arrête ici
         if self.startingDepth != depth and elapsedTime >= self.maxTime:
-            return (None, self.heuristicMethod(self._board, playedMove, color))
+            return (None, self.heuristicMethod(self._board, playedMove,self))
 
         # La valeur d'alpha au moment de commencer la recherche à partir de cette racine
         alphaOrig = alpha
@@ -221,7 +241,7 @@ class myPlayer(PlayerInterface):
         # On va aussi utiliser une profondeur d'arrêt
         if depth == 0 or self._board.is_game_over():
             # # print("Reached the end!")
-            return (None, self.heuristicMethod(self._board, playedMove, color))
+            return (None, self.heuristicMethod(self._board, playedMove, self))
 
         # Le coup a retourné, celui à jouer
         moveToPlay = None
@@ -363,8 +383,9 @@ class myPlayer(PlayerInterface):
         # print("My current board :")
 
         # print(self._board)
-
-        PPS.PositivePowerSpots(self._board.powerPoints, x, y)
+        length = len(self.powerPoints)
+        if (y == 0 or y == length - 1) and (x == 0 or x == length - 1):
+            PPS.PositivePowerSpots(self.powerPoints, x, y)
 
         return (x,y) #renvoyer le coup à jouer
 

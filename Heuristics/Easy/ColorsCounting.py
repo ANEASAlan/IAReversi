@@ -6,5 +6,5 @@ import Reversi
 # PION NOIR = -1
 # PION BLANC = 1
 # CASE VIDE = 0
-def heuristic(board, move, color):
-    return (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, color)
+def heuristic(board, move, player):
+    return (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, player._mycolor)

@@ -4,14 +4,14 @@ import Reversi
 # BLANC = 1
 # VIDE = 0
 
-def heuristic(board, myMove, mycolor):
+def heuristic(board, myMove, player):
 
     #if mycolor == 0:
 
-    if board._BLACK != mycolor and board._nbBLACK == 0:
+    if board._BLACK != player._mycolor and board._nbBLACK == 0:
         return 10000
 
-    if board._WHITE != mycolor and board._nbWHITE == 0:
+    if board._WHITE != player._mycolor and board._nbWHITE == 0:
         return 10000
 
     # On récupère la taille du plateau
@@ -29,7 +29,7 @@ def heuristic(board, myMove, mycolor):
     # On parcourt le plateau
     for x in range(size):
         for y in range(size):
-            point += board.powerPoints[x][y] * board.sameColor(board.getCell(x, y), mycolor) # ici MonteCarlo, à changer par un tableau de Power spots custom donné par les tests en réseaux de neurones
+            point += player.powerPoints[x][y] * board.sameColor(board.getCell(x, y), player._mycolor) # ici MonteCarlo, à changer par un tableau de Power spots custom donné par les tests en réseaux de neurones
 
     move += len(board.legal_moves())
     board.pop()
@@ -37,19 +37,19 @@ def heuristic(board, myMove, mycolor):
     board.push(myMove)
 
     # Calcul coin supérieur gauche
-    corner += corners[0][0] * board.sameColor(board.getCell(0, 0), mycolor)
+    corner += corners[0][0] * board.sameColor(board.getCell(0, 0), player._mycolor)
 
     # Calcul coin supérieur droit
-    corner += corners[0][size - 1] * board.sameColor(board.getCell(0, size - 1), mycolor)
+    corner += corners[0][size - 1] * board.sameColor(board.getCell(0, size - 1), player._mycolor)
 
     # Calcul coin inférieur gauche
-    corner += corners[size - 1][0] * board.sameColor(board.getCell(size - 1, 0), mycolor)
+    corner += corners[size - 1][0] * board.sameColor(board.getCell(size - 1, 0), player._mycolor)
 
     # Calcul coin inférieur droit
-    corner += corners[size - 1][size - 1] * board.sameColor(board.getCell(size - 1, size - 1), mycolor)
+    corner += corners[size - 1][size - 1] * board.sameColor(board.getCell(size - 1, size - 1), player._mycolor)
 
     totalNbPieces = board._nbBLACK + board._nbWHITE
-    color = (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, mycolor)
+    color = (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, player._mycolor)
 
     moveCountWeight = move * (1.5 - totalNbPieces / 100.0) ** 10
     colorsWeight = color * (0.10 + totalNbPieces / 100.0) ** 20

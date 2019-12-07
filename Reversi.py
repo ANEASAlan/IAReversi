@@ -38,7 +38,7 @@
 
     #def __str__(self)
 
-import createTab
+#import createTab
 
 class Board:
     _BLACK = 1
@@ -65,24 +65,24 @@ class Board:
       self.corners = []
       self.computeCorners()
 
-      self.powerPoints = [
-          [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
-          [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
-          [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
-          [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
-          [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
-          [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
-          [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
-          [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
-          [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
-          [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
-      ]
-
-      self.powerCarlito1 = createTab.createTab(1, self._boardsize)
-      self.powerCarlito2 = createTab.createTab(2, self._boardsize)
-      self.powerCarlito3 = createTab.createTab(3, self._boardsize)
-      self.powerCarlito4 = createTab.createTab(4, self._boardsize)
-      self.powerCarlito5 = createTab.createTab(5, self._boardsize)
+      # self.powerPoints = [
+      #     [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
+      #     [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+      #     [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+      #     [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+      #     [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+      #     [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+      #     [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+      #     [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+      #     [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+      #     [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
+      # ]
+      #
+      # self.powerCarlito1 = createTab.createTab(1, self._boardsize)
+      # self.powerCarlito2 = createTab.createTab(2, self._boardsize)
+      # self.powerCarlito3 = createTab.createTab(3, self._boardsize)
+      # self.powerCarlito4 = createTab.createTab(4, self._boardsize)
+      # self.powerCarlito5 = createTab.createTab(5, self._boardsize)
 
     def reset(self):
         self.__init__()

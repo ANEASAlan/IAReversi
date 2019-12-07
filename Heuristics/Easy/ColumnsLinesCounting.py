@@ -29,7 +29,7 @@ def countingLineCol(board, x, y, tmp, streak, color):
 
 
 
-def heuristic(board, move, color):
+def heuristic(board, move, player):
     # To parse the board you want to do a double for loop
     # Best case would be to do it all in a unique loop but that's
     # difficult
@@ -43,7 +43,7 @@ def heuristic(board, move, color):
         streak = [0, 0]
         tmp = [0, 0]
         for y in range(size):
-            (tmp[0], streak[0]) = countingLineCol(board, x, y, tmp[0], streak[0], color)
-            (tmp[1], streak[1]) = countingLineCol(board, y, x, tmp[1], streak[1], color)
+            (tmp[0], streak[0]) = countingLineCol(board, x, y, tmp[0], streak[0], player._mycolor)
+            (tmp[1], streak[1]) = countingLineCol(board, y, x, tmp[1], streak[1], player._mycolor)
 
     return (streak[0] + streak[1])

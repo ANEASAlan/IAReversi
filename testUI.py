@@ -65,7 +65,7 @@ def addAllPlayers(players):
     # addPlayer(players, "ColumnsLines", ColumnsLinesCounting.heuristic)
     # addPlayer(players, "Corners", CornersCounting.heuristic)
     # addPlayer(players, "MonteCarlo", MonteCarlo.heuristic)
-    # addPlayer(players, "Carlito1", MonteCarlito1.heuristic)
+    addPlayer(players, "Carlito1", MonteCarlito1.heuristic)
     # addPlayer(players, "Carlito2", MonteCarlito2.heuristic)
     # addPlayer(players, "Carlito3", MonteCarlito3.heuristic)
     # addPlayer(players, "Carlito4", MonteCarlito4.heuristic)
