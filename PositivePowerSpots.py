@@ -4,15 +4,14 @@ def PositivePowerSpots(powerSpots, y, x, length = 10):
     if (y != 0 and y != length - 1) or (x != 0 and x != length - 1):
         return
 
-    
+
     if x == 0 :
         powerSpots[1][y] = abs(powerSpots[1][y])
-        
+
     elif x == length - 1 :
         powerSpots[x-1][y] = abs(powerSpots[x-1][y])
 
     if y == 0 :
-        print("d")
         powerSpots[x][1] = abs(powerSpots[x][1])
 
     elif y == length - 1 :
@@ -29,4 +28,3 @@ def PositivePowerSpots(powerSpots, y, x, length = 10):
 
     elif x == length-1 and y == length - 1 :
         powerSpots[x-1][y-1] = abs(powerSpots[x-1][y-1])
-

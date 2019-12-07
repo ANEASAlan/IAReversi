@@ -5,6 +5,10 @@
 import time
 import Reversi
 import random
+import PositivePowerSpots as PPS
+import sys
+sys.path.insert(1,"../Heuristics/Easy")
+from Random import heuristic as Rd
 from playerInterface import *
 from enum import Enum
 
@@ -300,40 +304,45 @@ class myPlayer(PlayerInterface):
             # print("Referee told me to play but the game is over!")
             return (-1,-1) #(-1,-1) veut dire "je passe mon tour", si on est deux à passer notre tour, la partie est terminée
 
-        # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
-        # moveToPlay = None
-        # if random.randint(0, 100) == 0:
-        #     self.memory = {}
+        move = None
 
-        # On stocke le temps auquel la recherche a commencé
-        self.time = time.time()
+        if self.heuristicMethod == Rd :
+            move = random.choice(self._board.legal_moves())
+        else:
+            # (move, _) = self.negAlphaBeta(3, self.minInt, self.maxInt)
+            # moveToPlay = None
+            # if random.randint(0, 100) == 0:
+            #     self.memory = {}
 
-        # Iterative Deepening, on cherche pour 1, 2, 3 ..., n-1
-        for i in range(1, 100):
+            # On stocke le temps auquel la recherche a commencé
+            self.time = time.time()
 
-            # La profondeur de base (ce n'est pas 0, on stocke la profondeur à
-            # laquelle on veut aller)
-            self.startingDepth = i
+            # Iterative Deepening, on cherche pour 1, 2, 3 ..., n-1
+            for i in range(1, 100):
 
-            # La recherche !
-            move = None
-            if random.random() < self.randomnessAlan :
-                move = random.choice(self._board.legal_moves())
-            else :
-                (move, _) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt, self._mycolor, self.computeHash(), None)
-            # print(heur1)
+                # La profondeur de base (ce n'est pas 0, on stocke la profondeur à
+                # laquelle on veut aller)
+                self.startingDepth = i
 
-            # print(move)
-            # print(heur1)
+                # La recherche !
+                move = None
+                if random.random() < self.randomnessAlan :
+                    move = random.choice(self._board.legal_moves())
+                else :
+                    (move, _) = self.negAlphaBetaWithMemory(i, self.minInt, self.maxInt, self._mycolor, self.computeHash(), None)
+                # print(heur1)
 
-            # Si il n y a pas de coup retourné par l'algorithme
-            if move == None:
-                move = self._board.legal_moves()[0]
+                # print(move)
+                # print(heur1)
 
-            # Si le temps maximum de recherche est dépassé, on s'arrête
-            elapsedTime = time.time() - self.time
-            if elapsedTime >= self.maxTime:
-                break
+                # Si il n y a pas de coup retourné par l'algorithme
+                if move == None:
+                    move = self._board.legal_moves()[0]
+
+                # Si le temps maximum de recherche est dépassé, on s'arrête
+                elapsedTime = time.time() - self.time
+                if elapsedTime >= self.maxTime:
+                    break
 
         # print("Move played :")
         # print(moveToPlay)
@@ -355,7 +364,7 @@ class myPlayer(PlayerInterface):
 
         # print(self._board)
 
-        PositivePowerSpots(board.powerPoints, x, y)
+        PPS.PositivePowerSpots(self._board.powerPoints, x, y)
 
         return (x,y) #renvoyer le coup à jouer
 
