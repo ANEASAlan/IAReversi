@@ -20,3 +20,8 @@ for i in range(1):
     for layer in l[i].getLayers():
         for weight in layer.get_weights():
             print(weight.tolist())
+
+def swap(tbl, s, e):
+    tmp = tbl[s]
+    tbl[s] = tbl[e]
+    tbl[e] = tmp
