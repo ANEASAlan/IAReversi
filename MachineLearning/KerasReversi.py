@@ -69,7 +69,7 @@ class NeuralNetwork:
     # Utilisation du réseau de neurones
     def compute(self, inputs):
         # self.dummyY = self.generateDummyY(len(inputs))
-        return self.model.predict(inputs)
+        return self.model.predict(inputs)[0][0]
 
     def dummyLoss(self, y_true, y_pred):
         return y_pred
