@@ -70,7 +70,7 @@ def addAllPlayers(players):
     # addPlayer(players, "Carlito3", MonteCarlito3.heuristic)
     # addPlayer(players, "Carlito4", MonteCarlito4.heuristic)
     # addPlayer(players, "Carlito5", MonteCarlito5.heuristic)
-    # addPlayer(players, "Random", Random.heuristic)
+    addPlayer(players, "Random", Random.heuristic)
 
 # Cette fonction affiche le nom de tous les joueurs disponibles
 def displayPlayers(players):

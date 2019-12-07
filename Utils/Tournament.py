@@ -162,52 +162,52 @@ class Tournament:
             res = startMatch(board, match, boardSize, withUI, time)
 
             # On change les stats des joueurs
-            self.updateStats(match, res)
+            updateStats(match, res)
 
-    # Cette fonction change les stats des joueurs du match
-    def updateStats(self, match, res):
+# Cette fonction change les stats des joueurs du match
+def updateStats(match, res):
 
-        # On récupère le joueur blanc et le joueur noir afin d'alléger la
-        # suite du code
-        black = match.getBlack()
-        white = match.getWhite()
+    # On récupère le joueur blanc et le joueur noir afin d'alléger la
+    # suite du code
+    black = match.getBlack()
+    white = match.getWhite()
 
-        # Si les blancs ont gagné
-        if res == 0:
-            self.modifyPlayers(white, black)
-            match.winner = white
-            match.loser = black
+    # Si les blancs ont gagné
+    if res == 0:
+        modifyPlayers(white, black)
+        match.winner = white
+        match.loser = black
 
-        # Si les noirs ont gagné
-        elif res == 1:
-            self.modifyPlayers(black, white)
-            match.winner = black
-            match.loser = white
+    # Si les noirs ont gagné
+    elif res == 1:
+        modifyPlayers(black, white)
+        match.winner = black
+        match.loser = white
 
-        # Si il y a eu égalité
-        else:
-            white.deuces += 1
-            black.deuces += 1
-            white.deuced.append(black)
-            black.deuced.append(white)
+    # Si il y a eu égalité
+    else:
+        white.deuces += 1
+        black.deuces += 1
+        white.deuced.append(black)
+        black.deuced.append(white)
 
     # Cette fonction modifie les stats en fonction du gagnant et du perdant
-    def modifyPlayers(self, winner, loser):
+def modifyPlayers(winner, loser):
 
-        # Le gagnant a gagné une fois de plus, le perdant a perdu une fois de
-        # plus
-        winner.wins += 1
-        loser.loses += 1
+    # Le gagnant a gagné une fois de plus, le perdant a perdu une fois de
+    # plus
+    winner.wins += 1
+    loser.loses += 1
 
-        # Si le perdant n'est pas encore dans la liste des joueurs battus par
-        # le gagnant, on l'y ajoute
-        if not loser in winner.won:
-            winner.won.append(loser)
+    # Si le perdant n'est pas encore dans la liste des joueurs battus par
+    # le gagnant, on l'y ajoute
+    if not loser in winner.won:
+        winner.won.append(loser)
 
-        # Si le gagnant n'est pas encore dans la liste des joueurs ont battu
-        # le perdant, on l'y ajoute
-        if not winner in loser.lost:
-            loser.lost.append(winner)
+    # Si le gagnant n'est pas encore dans la liste des joueurs ont battu
+    # le perdant, on l'y ajoute
+    if not winner in loser.lost:
+        loser.lost.append(winner)
 
 # Cette fonction démarre un match donné en paramètre sur un plateau de taille
 # donnée
@@ -236,6 +236,8 @@ def startMatch(board, match, boardSize, withUI, time):
 
     # On récupère le résultat
     res = UI.printWinner(board, res)
+
+    updateStats(match, res)
 
     return res
 
@@ -319,6 +321,12 @@ def playMatchs(players, args):
                 print(m[0] + " is not a valid name for a player")
             if player2 == None:
                 print(m[1] + " is not a valid name for a player")
+
+    if "-NB" in sys.argv: ########################################CHANGEONS CA DES QUE POSSIBLE, CA FAIT MAL AAAAAAAHHHHHHHHH################
+        player1 = getPlayerFromName(players, m[0])
+        player2 = getPlayerFromName(players, m[1])
+        player1.printPlayer()
+        player2.printPlayer()
 
 # Cette fonction affiche les statistiques du tournoi
 def results(players):

@@ -25,6 +25,8 @@ class Argument:
         # y en a un
         self.filename = "Data/Results.xlsx"
 
+        #self.nbMatches = []
+
     # Cette fonction affiche tous les arguments et leur valeur
     def printArgs(self):
         print("----------------------")
@@ -104,6 +106,12 @@ def getArguments(argv):
                 player1 = argv[index + 1]
                 player2 = argv[index + 2]
                 arguments.matchs.append([player1, player2])
+                if index + 4  < len(argv):
+                    if("-NB" == argv[index+3]):
+                        #self.arguments.nbMatches.append(int(argv[index + 4]))
+                        for i in range((int(argv[index + 4])-1)):
+                            arguments.matchs.append([player1, player2])
+
 
         # Si l'argument est -h
         if "-h" == argv[index]:
@@ -158,6 +166,8 @@ def printHelp():
     print("-T [nb]              Allows tournaments to happen (nb is optional, sets the number of tournaments that should happen)")
     print("")
     print("-M [p1] [p2]         Sets a match that will happen between p1 and p2, which are the names of the players. If p1 or p2 is an incorrect name, the match will be cancelled")
+    print("")
+    print("-NB [nb]              Sets the number of matches to be held (1 by default). Only usable if -M was specified. Must be written just after -M.")
     print("")
     print("-P                   Prints the list of available players")
     print("")
