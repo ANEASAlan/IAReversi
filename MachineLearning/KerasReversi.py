@@ -26,11 +26,11 @@ class Topology:
 
 class NeuralNetwork:
 
-    MIN_TOPOLOGY_LENGTH = 3
+    MIN_TOPOLOGY_LENGTH = 3 # Au moins une entrée, une couche et une sortie
 
     def __init__(self, topology):
 
-        # La topologie du réseau de neurone, c'est-à-dire le nombre de couche
+        # La topologie du réseau de neurone, c'est-à-dire le nombre de couches
         # et le nombre de neurones par couche
         self.topology = topology
 
@@ -49,8 +49,8 @@ class NeuralNetwork:
     # Cette fonction crée le modèle keras à utiliser
     def createModel(self):
 
-        # Si il n'y a pas au moins une entrée, une couche et une sortie, on ne
-        # crée pas le modèle
+        # S'il n'y a pas au moins une entrée, une couche et une sortie,
+        # on ne crée pas le modèle
         if self.topology.getLength() >= self.MIN_TOPOLOGY_LENGTH:
 
             # On crée la couche d'entrée et la première couche cachée

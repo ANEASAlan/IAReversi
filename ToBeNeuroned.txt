@@ -1,0 +1,26 @@
+Valeurs qu'il faudra déterminer avec le réseaux de neuronne :
+
+
+[99,  -8,  8,  6,  3
+     -24, -4, -3, -1
+           7,  4,  2
+               0,  0,
+                   0, ... ]
+
+-Les 15 valeurs dans le tableau de PowerSpots.
+-Les 4 multiplicateurs pour les fonctions heuristiques (Move, Colors, Point, Corner)
+-Les 4 pourcentages en rapport avec le nombre de pièces en jeu, pour les heuristiques.
+
+moveCountWeight = move * (1.5 - totalNbPieces / 100.0) ** 10
+colorsWeight = color * (0.10 + totalNbPieces / 100.0) ** 20
+pointWeight = point * (2.0 - totalNbPieces / 100.0) ** 4
+cornerWeight = corner * (2.2 - totalNbPieces / 100.0) ** 5
+
+
+
+
+-La façon de mofidier le tableau de Power Spots selon l'évolution du board.
+Exemple : si on réussit à prendre le coin, on pourra considérer les cases avoisinantes comme ayant un Power Spot positif.
+Pour l'instant j'ai simplement fait ça :
+myPlayer.py -> dans getPlayerMove()
+PositivePowerSpots(board.powerPoints, x, y)
