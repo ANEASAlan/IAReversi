@@ -1,8 +1,12 @@
 import Reversi
+import sys
 
 # NOIR = -1
 # BLANC = 1
 # VIDE = 0
+
+CustomValues = True
+CustomWeights = [1.5,10,0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
 
 def heuristic(board, myMove, player):
 
@@ -52,10 +56,16 @@ def heuristic(board, myMove, player):
     totalNbPieces = board._nbBLACK + board._nbWHITE
     color = (board._nbBLACK - board._nbWHITE) * board.sameColor(board._BLACK, player._mycolor)
 
-    moveCountWeight = move * (1.5 - totalNbPieces / 100.0) ** 10
-    colorsWeight = color * (0.10 + totalNbPieces / 100.0) ** 20
-    pointWeight = point * (2.0 - totalNbPieces / 100.0) ** 4
-    cornerWeight = corner * (2.2 - totalNbPieces / 100.0) ** 5
+    if(CustomValues):
+        moveCountWeight = move * (CustomWeights[0][0] - totalNbPieces / 100.0) ** CustomWeights[0][1]
+        colorsWeight = color * (CustomWeights[0][2] + totalNbPieces / 100.0) ** CustomWeights[0][3]
+        pointWeight = point * (CustomWeights[0][4] - totalNbPieces / 100.0) ** CustomWeights[0][5]
+        cornerWeight = corner * (CustomWeights[0][6] - totalNbPieces / 100.0) ** CustomWeights[0][7]
+    else:
+        moveCountWeight = move * (1.5 - totalNbPieces / 100.0) ** 10
+        colorsWeight = color * (0.10 + totalNbPieces / 100.0) ** 20
+        pointWeight = point * (2.0 - totalNbPieces / 100.0) ** 4
+        cornerWeight = corner * (2.2 - totalNbPieces / 100.0) ** 5
 
     # print(color)
     # print("---------------------")

@@ -1,7 +1,7 @@
 import sys
 
-sys.path.insert(1, '../UI')
-sys.path.insert(1, '../Player')
+sys.path.insert(1, 'UI')
+sys.path.insert(1, 'Player')
 
 import UI
 import myPlayer
@@ -211,7 +211,7 @@ def modifyPlayers(winner, loser):
 
 # Cette fonction démarre un match donné en paramètre sur un plateau de taille
 # donnée
-def startMatch(board, match, boardSize, withUI, time):
+def startMatch(board, match, boardSize, withUI, time, weights = None):
 
     # On récupère le joueur blanc et le joueur noir afin d'alléger la
     # suite du code
@@ -227,6 +227,9 @@ def startMatch(board, match, boardSize, withUI, time):
 
     player1 = myPlayer.myPlayer(black.heuristic, time, boardSize, RANDOMNESSTHEOP1, RANDOMNESSALANP1)
     player2 = myPlayer.myPlayer(white.heuristic, time, boardSize, RANDOMNESSTHEOP2, RANDOMNESSALANP2)
+
+    if weights != None:
+        ChangePowerSpots.ChangeForEntireTable(player1._board, weights)
 
     # On donne au plyer1 les noirs et au player2 les blancs
     competitors = UI.assignColors(board, player1, player2)

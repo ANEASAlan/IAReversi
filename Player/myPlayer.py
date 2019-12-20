@@ -8,7 +8,7 @@ import random
 import createTab
 import PositivePowerSpots as PPS
 import sys
-sys.path.insert(1,"../Heuristics/Easy")
+sys.path.insert(1,"Heuristics/Easy")
 from Random import heuristic as Rd
 from playerInterface import *
 from enum import Enum
@@ -68,14 +68,14 @@ class myPlayer(PlayerInterface):
 
         self.powerPoints = [
             [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
-            [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+            [-8, -24, -4, -3, -3, -3, -3, -4, -24, -8],
             [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
             [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
             [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
             [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
             [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
             [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
-            [-8, -24, -4, -3, -1, -1, -3, -4, -24, -8],
+            [-8, -24, -4, -3, -3, -3, -3, -4, -24, -8],
             [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
         ]
 

@@ -167,7 +167,7 @@ def printHelp():
     print("")
     print("-M [p1] [p2]         Sets a match that will happen between p1 and p2, which are the names of the players. If p1 or p2 is an incorrect name, the match will be cancelled")
     print("")
-    print("-NB [nb]              Sets the number of matches to be held (1 by default). Only usable if -M was specified. Must be written just after -M.")
+    print("-NB [nb]             Sets the number of matches to be held (1 by default). Only usable if -M was specified. Must be written just after -M.")
     print("")
     print("-P                   Prints the list of available players")
     print("")

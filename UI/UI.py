@@ -1,8 +1,9 @@
-import Reversi
 import time
 from io import StringIO
 import pygame
 import sys
+sys.path.insert(1, './')
+import Reversi
 import random
 
 screen = None

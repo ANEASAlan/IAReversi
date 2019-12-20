@@ -46,3 +46,15 @@ def AddForEntireTable(powerSpots, table):
             y += 1
         else:
             x += 1
+
+def ChangeForEntireTable(powerSpots, table):
+    l = len(table) # Suposedly a table of size 15 in order to change the entire table
+    x = 0
+    y = 0
+    for i in range(l):
+        ChangePowerSpots(powerSpots, x, y, table[i])
+        if x == y:
+            x = 0
+            y += 1
+        else:
+            x += 1
