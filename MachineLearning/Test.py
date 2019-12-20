@@ -70,3 +70,8 @@ for i in range(20):
     haveBabies(topology, l, 50)
 
     print("The best of this generation reached: " + str(l[0].compute([2])))
+
+def genRandomWeights(nb):
+    l = []
+    for i in range(nb):
+        l.append(random.uniform())

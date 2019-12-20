@@ -16,3 +16,22 @@ def ChangePowerSpots(powerSpots, x, y, value, width = 10):
 
     if(x != y):
         subChange(powerSpots, y, x, value, width)
+
+def subAdd(powerSpots, x, y, value, width = 10):
+    powerSpots[x][y] += value
+
+    x = width - x - 1
+    powerSpots[x][y] += value
+
+    y = width - y - 1
+    powerSpots[x][y] += value
+
+    x = width - x - 1
+    powerSpots[x][y] += value
+
+def AddPowerSpots(powerSpots, x, y, value, width = 10):
+
+    subAdd(powerSpots, x, y, value, width)
+
+    if(x != y):
+        subAdd(powerSpots, y, x, value, width)

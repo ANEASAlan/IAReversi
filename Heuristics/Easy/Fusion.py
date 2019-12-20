@@ -29,7 +29,8 @@ def heuristic(board, myMove, player):
     # On parcourt le plateau
     for x in range(size):
         for y in range(size):
-            point += player.powerPoints[x][y] * board.sameColor(board.getCell(x, y), player._mycolor) # ici MonteCarlo, à changer par un tableau de Power spots custom donné par les tests en réseaux de neurones
+            point += player.powerPoints[x][y] * board.sameColor(board.getCell(x, y), player._mycolor)
+            # ici MonteCarlo, à changer par un tableau de Power spots custom donné par les tests en réseaux de neurones
 
     move += len(board.legal_moves())
     board.pop()
