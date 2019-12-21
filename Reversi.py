@@ -65,7 +65,7 @@ class Board:
       self.corners = []
       self.computeCorners()
 
-      # self.powerPoints = [
+      # self.myPowerSpots = [
       #     [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
       #     [-8, -24, -4, -3, -3, -3, -3, -4, -24, -8],
       #     [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],

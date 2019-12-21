@@ -7,16 +7,17 @@ import sys
 
 CustomValues = True
 CustomWeights = [1.5,10,0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+## tester CustomWeights = [1.5,-10,0.10,20,2.0,4,2.2,5], [64,-5,-16,5,-3,5,4,-2,3,0,2,-2,1,0,0]
 
 def heuristic(board, myMove, player):
 
     #if mycolor == 0:
 
     if board._BLACK != player._mycolor and board._nbBLACK == 0:
-        return 10000
+        return 100000
 
     if board._WHITE != player._mycolor and board._nbWHITE == 0:
-        return 10000
+        return 100000
 
     # On récupère la taille du plateau
     size = board.get_board_size()
@@ -33,7 +34,10 @@ def heuristic(board, myMove, player):
     # On parcourt le plateau
     for x in range(size):
         for y in range(size):
-            point += player.powerPoints[x][y] * board.sameColor(board.getCell(x, y), player._mycolor)
+            if board._BLACK == player._mycolor :
+                point += player.myPowerSpots[x][y] * board.sameColor(board.getCell(x, y), player._mycolor)
+            else:
+                point += player.ennemyPowerSpots[x][y] * board.sameColor(board.getCell(x, y), player._mycolor)
             # ici MonteCarlo, à changer par un tableau de Power spots custom donné par les tests en réseaux de neurones
 
     move += len(board.legal_moves())

@@ -117,19 +117,38 @@ def genRandomWeights(nb):
     for i in range(nb):
         l.append(random.uniform())
 
+def aBattle(player1, players, board, name):
+    UIon = False
+    Speed = 0.5
+    board = Reversi.Board(10)
+    player2 = Tournament.getPlayerFromName(players, name)
+    match = Tournament.Match(player1, player2)
+    Tournament.startMatch(board, match, 10, UIon, Speed, Fusion.CustomWeights[1])
+    if(match.winner == player1):
+        print(board._nbBLACK)
+        print(Fusion.CustomWeights)
+
+def battleRoyale(player1, players, board):
+    aBattle(player1, players, board, 'Random')
+    aBattle(player1, players, board, 'Move')
+    aBattle(player1, players, board, 'Fusion')
+    aBattle(player1, players, board, 'Colors')
+    aBattle(player1, players, board, 'ColumnsLines')
+    aBattle(player1, players, board, 'Corners')
+    aBattle(player1, players, board, 'MonteCarlo')
+    aBattle(player1, players, board, 'Carlito1')
+    aBattle(player1, players, board, 'Carlito2')
+    aBattle(player1, players, board, 'Carlito3')
+    aBattle(player1, players, board, 'Carlito4')
+    aBattle(player1, players, board, 'Carlito5')
+
 def testNWeights():
     board = Reversi.Board(10)
     players = []
     playerList = []
     addAllPlayers(players)
     player1 = Tournament.getPlayerFromName(players, 'Fusion')
-    player2 = Tournament.getPlayerFromName(players, 'Random')
-    match = Tournament.Match(player1, player2)
-    Tournament.startMatch(board, match, 10, False, 0.1, Fusion.CustomWeights)
-    if(match.winner == player1):
-        print(board._nbBLACK)
-        print(Fusion.CustomWeights)
-    ##ChangePowerSpots.ChangeForEntireTable(player1._board, Fusion.CustomWeights[1])
+    battleRoyale(player1, players, board)
 
 
 #UI.initUI(True, 10)

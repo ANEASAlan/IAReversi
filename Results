@@ -1,0 +1,286 @@
+Avec les valeurs d'origines : (en réflexion 0.5 secondes)
+([1.5, 10, 0.1, 20, 2.0, 4, 2.2, 5], [99, -8, -24, 8, -4, 7, 6, -3, 4, 0, 3, -3, 2, 0, 0])
+Contre Rd : 59
+Contre Move : 66
+Contre Fusion : Perdu 49
+Contre Colors : 59
+Contre ColumnLines : 68
+Contre Corners : Perdu
+Contre MC : Perdu
+Contre C1 : 67
+Contre C2 : 72
+Contre C3 : Perdu
+Contre C4 : Perdu
+Contre C5 : Perdu
+
+
+Avec : Double première valeur [3,10,0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 62
+Contre Move : 73
+Contre Fusion : 69
+Contre Colors : 70
+Contre ColumnLines : Perdu
+Contre Corners : Perdu
+Contre MC : 79
+Contre C1 : Perdu
+Contre C2 : 53
+Contre C3 : Perdu
+Contre C4 : Perdu
+Contre C5 : 57
+
+Conclusion : Intéressant, à surveiller
+
+
+Avec : Opposé première valeur [-1.5,10,0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 59
+Contre Move : Perdu
+Contre Fusion : Perdu 42
+Contre Colors : 76
+Contre ColumnLines : Perdu
+Contre Corners : 69
+Contre MC : 65
+Contre C1 : Perdu
+Contre C2 : Perdu
+Contre C3 : 79
+Contre C4 : 53
+Contre C5 : Perdu
+
+Conclusion : Un peu pire qu'avec 3, mais pas tant que ça
+
+
+Avec : Double deuxième valeur [3,20,0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 73
+Contre Move : 63
+Contre Fusion : Perdu 41
+Contre Colors : 58
+Contre ColumnLines : Perdu
+Contre Corners : 69
+Contre MC : 65
+Contre C1 : Perdu
+Contre C2 : 57
+Contre C3 : Perdu
+Contre C4 : Perdu
+Contre C5 : 51
+
+Conclusion : Pas ouf, mais a battu MonteCarlo
+
+
+Avec : Opposé deuxième valeur [3,-10,0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 80
+Contre Move : Perdu
+Contre Fusion : Perdu 29
+Contre Colors : 68
+Contre ColumnLines : 59
+Contre Corners : 65
+Contre MC : 76
+Contre C1 : 59
+Contre C2 : 78
+Contre C3 : Perdu
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Double troisième valeur [3,10,0.20,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Opposé troisième valeur [3,10,-0.10,20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Double quatrième valeur [3,10,0.10,40,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Opposé quatrième valeur [3,10,0.10,-20,2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Double cinquième valeur [3,10,0.10,20,4.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Opposé cinquième valeur [3,10,0.10,20,-2.0,4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Double sixième valeur [3,10,0.10,20,2.0,8,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Opposé sixième valeur [3,10,0.10,20,2.0,-4,2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Double septième valeur [3,10,0.10,20,2.0,4,4.4,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Opposé septème valeur [3,10,0.10,20,2.0,4,-2.2,5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Double huitième valeur [3,10,0.10,20,2.0,4,2.2,10], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 
+
+
+Avec : Opposé huitème valeur [3,10,0.10,20,2.0,4,2.2,-5], [99,-8,-24,8,-4,7,6,-3,4,0,3,-3,2,0,0]
+Contre Rd : 
+Contre Move : 
+Contre Fusion : 
+Contre Colors : 
+Contre ColumnLines : 
+Contre Corners : 
+Contre MC : 
+Contre C1 : 
+Contre C2 : 
+Contre C3 : 
+Contre C4 : 
+Contre C5 : 
+
+Conclusion : 

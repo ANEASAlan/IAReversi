@@ -24,3 +24,4 @@ Exemple : si on réussit à prendre le coin, on pourra considérer les cases avo
 Pour l'instant j'ai simplement fait ça :
 myPlayer.py -> dans getPlayerMove()
 PositivePowerSpots(board.powerPoints, x, y)
+

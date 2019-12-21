@@ -1,6 +1,6 @@
 # y being the abscissa, and x being the ordinate, even though it's unusual, in order to have the user write the abscissa before and the ordinate after
 def PositivePowerSpots(powerSpots, y, x, length = 10):
-
+    #print(y, x)
     if (y != 0 and y != length - 1) or (x != 0 and x != length - 1):
         return
 
@@ -28,3 +28,6 @@ def PositivePowerSpots(powerSpots, y, x, length = 10):
 
     elif x == length-1 and y == length - 1 :
         powerSpots[x-1][y-1] = abs(powerSpots[x-1][y-1])
+
+    #for p in powerSpots:
+    #    print(p)

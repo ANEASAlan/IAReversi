@@ -13,5 +13,8 @@ def heuristic(board, move, player):
     # On parcourt le plateau
     for x in range(size):
         for y in range(size):
-            points += player.powerPoints[x][y] * board.sameColor(board.getCell(x, y), player.color)
+            if board._BLACK == player._mycolor :
+                points += player.myPowerSpots[x][y] * board.sameColor(board.getCell(x, y), player._mycolor)
+            else:
+                points += player.ennemyPowerSpots[x][y] * board.sameColor(board.getCell(x, y), player._mycolor)
     return points

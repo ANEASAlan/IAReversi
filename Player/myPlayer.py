@@ -66,7 +66,20 @@ class myPlayer(PlayerInterface):
         # Le temps maximal durant lequel nous pouvons faire une recherche
         self.maxTime = maxTime
 
-        self.powerPoints = [
+        self.myPowerSpots = [
+            [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
+            [-8, -24, -4, -3, -3, -3, -3, -4, -24, -8],
+            [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+            [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+            [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+            [ 3,  -3,  2,  0,  0,  0,  0,  2,  -3,  3],
+            [ 6,  -3,  4,  0,  0,  0,  0,  4,  -3,  6],
+            [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
+            [-8, -24, -4, -3, -3, -3, -3, -4, -24, -8],
+            [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99]
+        ]
+
+        self.ennemyPowerSpots = [
             [99,  -8,  8,  6,  3,  3,  6,  8,  -8, 99],
             [-8, -24, -4, -3, -3, -3, -3, -4, -24, -8],
             [ 8,  -4,  7,  4,  2,  2,  4,  7,  -4,  8],
@@ -383,9 +396,9 @@ class myPlayer(PlayerInterface):
         # print("My current board :")
 
         # print(self._board)
-        length = len(self.powerPoints)
+        length = len(self.myPowerSpots)
         if (y == 0 or y == length - 1) and (x == 0 or x == length - 1):
-            PPS.PositivePowerSpots(self.powerPoints, x, y)
+            PPS.PositivePowerSpots(self.myPowerSpots, x, y)
 
         return (x,y) #renvoyer le coup à jouer
 
@@ -394,6 +407,9 @@ class myPlayer(PlayerInterface):
     def playOpponentMove(self, x,y):
         assert(self._board.is_valid_move(self._opponent, x, y))
         # # print("Opponent played ", (x,y))
+        length = len(self.myPowerSpots)
+        if (y == 0 or y == length - 1) and (x == 0 or x == length - 1):
+            PPS.PositivePowerSpots(self.ennemyPowerSpots, x, y)
         self._board.push([self._opponent, x, y])
 
     # Starts a new game, and give you your color.

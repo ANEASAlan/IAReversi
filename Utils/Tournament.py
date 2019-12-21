@@ -7,6 +7,9 @@ import UI
 import myPlayer
 import ExcelFile
 
+sys.path.insert(1, './')
+import ChangePowerSpots
+
 RANDOMNESSTHEOP1 = 0 # Renvoyer une heurisitique alpha, osef, pour joueur 1
 RANDOMNESSALANP1 = 0 # Renvoyer un move aléatoire, pour joueur 1
 RANDOMNESSTHEOP2 = 0 # Renvoyer une heurisitique alpha, osef, pour joueur 2
@@ -229,7 +232,8 @@ def startMatch(board, match, boardSize, withUI, time, weights = None):
     player2 = myPlayer.myPlayer(white.heuristic, time, boardSize, RANDOMNESSTHEOP2, RANDOMNESSALANP2)
 
     if weights != None:
-        ChangePowerSpots.ChangeForEntireTable(player1._board, weights)
+        ChangePowerSpots.ChangeForEntireTable(player1.myPowerSpots, weights)
+        ChangePowerSpots.ChangeForEntireTable(player1.ennemyPowerSpots, weights)
 
     # On donne au plyer1 les noirs et au player2 les blancs
     competitors = UI.assignColors(board, player1, player2)
